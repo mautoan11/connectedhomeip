@@ -54,11 +54,12 @@ private:
     // The tuple contains the commands, whether it's a synthetic cluster, and
     // the help text for the cluster (which may be null).
     using CommandSetMap = std::map<std::string, CommandSet>;
-
+public:
     CHIP_ERROR RunCommand(int argc, char ** argv, bool interactive = false,
                           const chip::Optional<char *> & interactiveStorageDirectory = chip::NullOptional,
                           bool interactiveAdvertiseOperational                       = false);
 
+private:
     CommandSetMap::iterator GetCommandSet(std::string commandSetName);
     Command * GetCommand(CommandsVector & commands, std::string commandName);
     Command * GetGlobalCommand(CommandsVector & commands, std::string commandName, std::string attributeName);

@@ -330,7 +330,6 @@ CHIP_ERROR InteractiveServerCommand::LogJSON(const char * json)
 CHIP_ERROR InteractiveStartCommand::RunCommand()
 {
     read_history(kInteractiveModeHistoryFilePath);
-
     // Logs needs to be redirected in order to refresh the screen appropriately when something
     // is dumped to stdout while the user is typing a command.
     chip::Logging::SetLogRedirectCallback(LoggingCallback);
@@ -339,7 +338,12 @@ CHIP_ERROR InteractiveStartCommand::RunCommand()
     int status;
     while (true)
     {
+        printf("\n\n sdsdsdsd \n\n");
+
         command = GetCommand(command);
+        free(command);
+        command = (char*)(malloc(sizeof(char) * 128));
+        sprintf(command,"%s","onoff toggle 1111 3");
         if (command != nullptr && !ParseCommand(command, &status))
         {
             break;

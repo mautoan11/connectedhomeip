@@ -31,6 +31,7 @@
 
 #include <zap-generated/cluster/Commands.h>
 
+#include "Controller.h"
 // ================================================================================
 // Main Code
 // ================================================================================
@@ -49,5 +50,8 @@ int main(int argc, char * argv[])
     registerCommandsStorage(commands);
     registerCommandsSessionManagement(commands, &credIssuerCommands);
 
+    Controller* controller = new Controller(&commands);
+    controller->TestPrint();
+    controller->Start();
     return commands.Run(argc, argv);
 }
