@@ -282,6 +282,7 @@ CHIP_ERROR InteractiveServerCommand::RunCommand()
 {
     // Logs needs to be redirected in order to refresh the screen appropriately when something
     // is dumped to stdout while the user is typing a command.
+    //printf("\nCHECK INTERACTIVE 10\n");
     chip::Logging::SetLogRedirectCallback(InteractiveServerLoggingCallback);
 
     RemoteDataModelLogger::SetDelegate(this);
@@ -341,9 +342,13 @@ CHIP_ERROR InteractiveStartCommand::RunCommand()
         printf("\n\n sdsdsdsd \n\n");
 
         command = GetCommand(command);
-        free(command);
-        command = (char*)(malloc(sizeof(char) * 128));
-        sprintf(command,"%s","onoff toggle 1111 3");
+        //free(command);
+        //command = (char*)(malloc(sizeof(char) * 128));
+        //sprintf(command,"%s","onoff toggle 1111 3");
+
+        //int d = 0;
+        //int c = 1/d;
+        //printf("%d",c);
         if (command != nullptr && !ParseCommand(command, &status))
         {
             break;

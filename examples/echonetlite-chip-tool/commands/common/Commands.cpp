@@ -221,6 +221,7 @@ int Commands::RunInteractive(const char * command, const chip::Optional<char *> 
 CHIP_ERROR Commands::RunCommand(int argc, char ** argv, bool interactive,
                                 const chip::Optional<char *> & interactiveStorageDirectory, bool interactiveAdvertiseOperational)
 {
+    
     Command * command = nullptr;
 
     if (argc <= 1)
@@ -286,6 +287,7 @@ CHIP_ERROR Commands::RunCommand(int argc, char ** argv, bool interactive,
         }
 
         command = GetGlobalCommand(commandList, argv[2], argv[3]);
+        printf("\n\n\n\n\n interactive here (1) \n\n\n\n\n");
         if (command == nullptr)
         {
             ChipLogError(chipTool, "Unknown attribute: %s", argv[3]);
@@ -295,6 +297,7 @@ CHIP_ERROR Commands::RunCommand(int argc, char ** argv, bool interactive,
     }
 
     int argumentsPosition = isGlobalCommand ? 4 : 3;
+    printf("\n\n\n\n\n interactive here (4) %d argc=%d (%d) \n\n\n\n\n",argumentsPosition,argc,argc - argumentsPosition);
     if (!command->InitArguments(argc - argumentsPosition, &argv[argumentsPosition]))
     {
         if (interactive)
@@ -307,6 +310,7 @@ CHIP_ERROR Commands::RunCommand(int argc, char ** argv, bool interactive,
 
     if (interactive)
     {
+        printf("\n\n\n\n\n interactive here \n\n\n\n\n");
         return command->RunAsInteractive(interactiveStorageDirectory, interactiveAdvertiseOperational);
     }
 
@@ -327,7 +331,7 @@ CHIP_ERROR Commands::RunCommand(int argc, char ** argv, bool interactive,
 #endif // !CHIP_DISABLE_PLATFORM_KVS
 
 #endif // CONFIG_USE_LOCAL_STORAGE
-
+    printf("\n\n\n\n\n interactive here (2) \n\n\n\n\n");
     return command->Run();
 }
 

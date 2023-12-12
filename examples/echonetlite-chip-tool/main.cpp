@@ -35,6 +35,28 @@
 // ================================================================================
 // Main Code
 // ================================================================================
+// int main(int argc, char * argv[])
+// {
+//     ExampleCredentialIssuerCommands credIssuerCommands;
+//     Commands commands;
+//     registerCommandsDelay(commands, &credIssuerCommands);
+//     registerCommandsDiscover(commands, &credIssuerCommands);
+//     registerCommandsInteractive(commands, &credIssuerCommands);
+//     registerCommandsPayload(commands);
+//     registerCommandsPairing(commands, &credIssuerCommands);
+//     registerCommandsGroup(commands, &credIssuerCommands);
+//     registerClusters(commands, &credIssuerCommands);
+//     registerCommandsSubscriptions(commands, &credIssuerCommands);
+//     registerCommandsStorage(commands);
+//     registerCommandsSessionManagement(commands, &credIssuerCommands);
+
+//     Controller* controller = new Controller(&commands);
+//     controller->TestPrint();
+//     controller->Start();
+//     return commands.Run(argc, argv);
+// }
+
+
 int main(int argc, char * argv[])
 {
     ExampleCredentialIssuerCommands credIssuerCommands;
@@ -53,5 +75,11 @@ int main(int argc, char * argv[])
     Controller* controller = new Controller(&commands);
     controller->TestPrint();
     controller->Start();
+    //return commands.Run(argc, argv);
+    // while (true)
+    // {
+    //     sleep(1);
+    // }
     return commands.Run(argc, argv);
+    
 }

@@ -25,7 +25,7 @@ using namespace ::chip;
 
 CHIP_ERROR ModelCommand::RunCommand()
 {
-
+    printf("\nCHECK ModelCommand 10\n");
     if (IsGroupId(mDestinationId))
     {
         FabricIndex fabricIndex = CurrentCommissioner().GetFabricIndex();
@@ -41,7 +41,7 @@ CHIP_ERROR ModelCommand::RunCommand()
     {
         return SendCommand(commissioneeDeviceProxy, mEndPointId);
     }
-
+    printf("\nCHECK ModelCommand 11\n");
     return CurrentCommissioner().GetConnectedDevice(mDestinationId, &mOnDeviceConnectedCallback,
                                                     &mOnDeviceConnectionFailureCallback);
 }
@@ -55,6 +55,7 @@ void ModelCommand::OnDeviceConnectedFn(void * context, chip::Messaging::Exchange
     chip::OperationalDeviceProxy device(&exchangeMgr, sessionHandle);
     CHIP_ERROR err = command->SendCommand(&device, command->mEndPointId);
     VerifyOrReturn(CHIP_NO_ERROR == err, command->SetCommandExitStatus(err));
+    printf("\nCHECK ModelCommand 12: %s \n", command->GetName());
 }
 
 void ModelCommand::OnDeviceConnectionFailureFn(void * context, const chip::ScopedNodeId & peerId, CHIP_ERROR err)

@@ -221,8 +221,9 @@ CHIP_ERROR CHIPCommand::Run()
 {
     ReturnErrorOnFailure(MaybeSetUpStack());
 
+    printf("\nCHECK1\n");
     CHIP_ERROR err = StartWaiting(GetWaitDuration());
-
+    printf("\nCHECK2\n");
     if (IsInteractive())
     {
         bool timedOut;
@@ -495,15 +496,17 @@ void CHIPCommand::RunQueuedCommand(intptr_t commandArg)
 {
     auto * command = reinterpret_cast<CHIPCommand *>(commandArg);
     CHIP_ERROR err = command->EnsureCommissionerForIdentity(command->GetIdentity());
+    printf("CHECK 7\n");
     if (err == CHIP_NO_ERROR)
     {
         err = command->RunCommand();
     }
-
+    printf("CHECK 8\n");
     if (err != CHIP_NO_ERROR)
     {
         command->SetCommandExitStatus(err);
     }
+    printf("CHECK 9\n");
 }
 
 void CHIPCommand::RunCommandCleanup(intptr_t commandArg)
@@ -574,12 +577,16 @@ CHIP_ERROR CHIPCommand::StartWaiting(chip::System::Clock::Timeout duration)
 
     if (duration.count() == 0)
     {
+        printf("CHECK 11\n");
         mCommandExitStatus = RunCommand();
+        printf("CHECK 22\n");
     }
     else
     {
         bool timedOut;
+        printf("CHECK 33\n");
         CHIP_ERROR err = RunOnMatterQueue(RunQueuedCommand, duration, &timedOut);
+        printf("CHECK 44\n");
         if (CHIP_NO_ERROR != err)
         {
             return err;

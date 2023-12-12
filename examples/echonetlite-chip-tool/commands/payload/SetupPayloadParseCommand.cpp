@@ -49,6 +49,7 @@ const char * CustomFlowString(CommissioningFlow flow)
 
 CHIP_ERROR SetupPayloadParseCommand::Run()
 {
+    printf("\n\n\n TOAN SetupPayloadParseCommand::Run \n");
     std::string codeString(mCode);
     SetupPayload payload;
 

@@ -18,6 +18,7 @@
 
 #include "SetupPayloadGenerateCommand.h"
 #include <lib/core/TLV.h>
+//#include <lib/core/TLV_de.h>
 #include <setup_payload/ManualSetupPayloadGenerator.h>
 #include <setup_payload/ManualSetupPayloadParser.h>
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
@@ -116,6 +117,7 @@ CHIP_ERROR SetupPayloadGenerateQRCodeCommand::Run()
 
 CHIP_ERROR SetupPayloadGenerateQRCodeCommand::PopulatePayloadTLVFromBytes(SetupPayload & payload, const ByteSpan & tlvBytes)
 {
+    printf("\n\n\n TOAN PopulatePayloadTLVFromBytes \n");
     // First clear out all the existing TVL bits from the payload.  Ignore
     // errors here, because we don't care if those bits are not present.
     (void) payload.removeSerialNumber();
@@ -213,6 +215,7 @@ CHIP_ERROR SetupPayloadGenerateQRCodeCommand::PopulatePayloadTLVFromBytes(SetupP
 
 CHIP_ERROR SetupPayloadGenerateManualCodeCommand::Run()
 {
+    printf("\n\n\n TOAN SetupPayloadGenerateManualCodeCommand::Run \n");
     SetupPayload payload;
 
     if (mExistingPayload.HasValue())

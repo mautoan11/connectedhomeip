@@ -17,5 +17,6 @@ public:
     void TestPrint();//{printf("\n\nTest Controller OK\n\n");};
     void Start();
     void TestCommand();
+    int RunCommand(char* command);
 };
 #endif

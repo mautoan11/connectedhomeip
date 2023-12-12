@@ -28,6 +28,12 @@ namespace app {
 #if CHIP_CONFIG_IM_PRETTY_PRINT
 CHIP_ERROR InvokeResponseMessage::Parser::PrettyPrint() const
 {
+    // int a = 2;
+    // int b = 0;
+    // printf("%d",a/b);
+
+
+    //printf("\n\nTOAN A123 \n");
     CHIP_ERROR err = CHIP_NO_ERROR;
     TLV::TLVReader reader;
 

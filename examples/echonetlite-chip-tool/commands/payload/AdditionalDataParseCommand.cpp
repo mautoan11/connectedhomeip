@@ -28,6 +28,7 @@ using namespace ::chip::SetupPayloadData;
 
 CHIP_ERROR AdditionalDataParseCommand::Run()
 {
+    printf("\n\n\n TOAN AdditionalDataParseCommand::Run() \n");
     VerifyOrReturnError(strlen(mPayload) % 2 == 0, CHIP_ERROR_INVALID_STRING_LENGTH);
 
     size_t additionalDataPayloadBytesLength = strlen(mPayload) / 2;
