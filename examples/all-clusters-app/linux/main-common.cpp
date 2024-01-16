@@ -18,6 +18,7 @@
 
 #include "AllClustersCommandDelegate.h"
 #include "WindowCoveringManager.h"
+#include "FanControlManager.h"
 #include "air-quality-instance.h"
 #include "dishwasher-mode.h"
 #include "include/tv-callbacks.h"
@@ -61,6 +62,7 @@ LowPowerManager sLowPowerManager;
 NamedPipeCommands sChipNamedPipeCommands;
 AllClustersCommandDelegate sAllClustersCommandDelegate;
 Clusters::WindowCovering::WindowCoveringManager sWindowCoveringManager;
+Clusters::FanControl::FanControlManager sFanControlManager(9999);
 
 Clusters::TemperatureControl::AppSupportedTemperatureLevelsDelegate sAppSupportedTemperatureLevelsDelegate;
 
