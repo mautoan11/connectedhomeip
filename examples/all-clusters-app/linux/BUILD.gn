@@ -45,7 +45,6 @@ source_set("chip-all-clusters-common") {
     "AllClustersCommandDelegate.cpp",
     "AppOptions.cpp",
     "WindowCoveringManager.cpp",
-    "FanControlManager.cpp",
     "include/tv-callbacks.cpp",
     "include/tv-callbacks.h",
     "main-common.cpp",

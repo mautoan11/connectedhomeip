@@ -171,6 +171,7 @@ CHIP_ERROR FanControlManager::Read(const ConcreteReadAttributePath & aPath, Attr
 
 void emberAfFanControlClusterInitCallback(EndpointId endpoint)
 {
+    
     VerifyOrDie(mFanControlManager == nullptr);
     mFanControlManager = new FanControlManager(endpoint);
     registerAttributeAccessOverride(mFanControlManager);
