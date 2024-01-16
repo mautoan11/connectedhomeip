@@ -6,3 +6,4 @@ zapgen:
 gen: zapgen main	
 zap:
 	./scripts/tools/zap/run_zaptool.sh ./examples/all-clusters-app/all-clusters-common/all-clusters-app.zap
+all: zap gen
