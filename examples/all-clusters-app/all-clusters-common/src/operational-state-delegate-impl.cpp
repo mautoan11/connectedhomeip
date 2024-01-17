@@ -119,16 +119,27 @@ void OperationalState::Shutdown()
 
 void emberAfOperationalStateClusterInitCallback(chip::EndpointId endpointId)
 {
-    VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
-    VerifyOrDie(gOperationalStateInstance == nullptr && gOperationalStateDelegate == nullptr);
-
+    
+    if(gOperationalStateInstance == nullptr)
+    {
     gOperationalStateDelegate           = new OperationalStateDelegate;
-    EndpointId operationalStateEndpoint = 0x01;
+    EndpointId operationalStateEndpoint = endpointId;
     gOperationalStateInstance           = new OperationalState::Instance(gOperationalStateDelegate, operationalStateEndpoint);
 
     gOperationalStateInstance->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
 
     gOperationalStateInstance->Init();
+    }
+    else
+    {
+        OperationalStateDelegate* gOperationalStateDelegate2           = new OperationalStateDelegate;
+        EndpointId operationalStateEndpoint2 = endpointId;
+     OperationalState::Instance* gOperationalStateInstance2           = new OperationalState::Instance(gOperationalStateDelegate2, operationalStateEndpoint2);
+
+     gOperationalStateInstance2->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
+
+     gOperationalStateInstance2->Init();
+    }
 }
 
 // Init RVC Operational State cluster
