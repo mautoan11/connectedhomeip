@@ -8297,6 +8297,440 @@ cluster WakeOnLan = 1283 {
   readonly attribute int16u clusterRevision = 65533;
 }
 
+/** This cluster provides an interface for controlling the current Channel on a device. */
+cluster Channel = 1284 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum ChannelTypeEnum : enum8 {
+    kSatellite = 0;
+    kCable = 1;
+    kTerrestrial = 2;
+  }
+
+  enum LineupInfoTypeEnum : enum8 {
+    kMSO = 0;
+  }
+
+  enum StatusEnum : enum8 {
+    kSuccess = 0;
+    kMultipleMatches = 1;
+    kNoMatches = 2;
+  }
+
+  bitmap Feature : bitmap32 {
+    kChannelList = 0x1;
+    kLineupInfo = 0x2;
+    kElectronicGuide = 0x3;
+    kRecordProgram = 0x4;
+  }
+
+  bitmap RecordingFlagBitmap : bitmap32 {
+    kScheduled = 0x1;
+    kRecordSeries = 0x2;
+    kRecorded = 0x3;
+  }
+
+  struct ProgramCastStruct {
+    char_string name = 0;
+    char_string role = 1;
+  }
+
+  struct ProgramCategoryStruct {
+    char_string category = 0;
+    optional char_string subCategory = 1;
+  }
+
+  struct SeriesInfoStruct {
+    char_string season = 0;
+    char_string episode = 1;
+  }
+
+  struct ChannelInfoStruct {
+    int16u majorNumber = 0;
+    int16u minorNumber = 1;
+    optional char_string name = 2;
+    optional char_string callSign = 3;
+    optional char_string affiliateCallSign = 4;
+    optional char_string identifier = 5;
+    optional ChannelTypeEnum type = 6;
+  }
+
+  struct ProgramStruct {
+    char_string identifier = 0;
+    ChannelInfoStruct channel = 1;
+    epoch_s startTime = 2;
+    epoch_s endTime = 3;
+    char_string title = 4;
+    optional char_string subtitle = 5;
+    optional char_string description = 6;
+    optional char_string audioLanguages[] = 7;
+    optional char_string ratings[] = 8;
+    optional char_string thumbnailUrl = 9;
+    optional char_string posterArtUrl = 10;
+    optional char_string dvbiUrl = 11;
+    optional char_string releaseDate = 12;
+    optional char_string parentalGuidanceText = 13;
+    optional RecordingFlagBitmap recordingFlag = 14;
+    optional nullable SeriesInfoStruct seriesInfo = 15;
+    optional ProgramCategoryStruct categoryList[] = 16;
+    optional ProgramCastStruct castList[] = 17;
+    optional ProgramCastStruct externalIDList[] = 18;
+  }
+
+  struct PageTokenStruct {
+    optional int16u limit = 0;
+    optional char_string after = 1;
+    optional char_string before = 2;
+  }
+
+  struct ChannelPagingStruct {
+    optional nullable PageTokenStruct previousToken = 0;
+    optional nullable PageTokenStruct nextToken = 1;
+  }
+
+  struct AdditionalInfoStruct {
+    char_string name = 0;
+    char_string value = 1;
+  }
+
+  struct LineupInfoStruct {
+    char_string operatorName = 0;
+    optional char_string lineupName = 1;
+    optional char_string postalCode = 2;
+    LineupInfoTypeEnum lineupInfoType = 3;
+  }
+
+  readonly attribute optional ChannelInfoStruct channelList[] = 0;
+  readonly attribute optional nullable LineupInfoStruct lineup = 1;
+  readonly attribute optional nullable ChannelInfoStruct currentChannel = 2;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct ChangeChannelRequest {
+    char_string match = 0;
+  }
+
+  response struct ChangeChannelResponse = 1 {
+    StatusEnum status = 0;
+    optional char_string data = 1;
+  }
+
+  request struct ChangeChannelByNumberRequest {
+    int16u majorNumber = 0;
+    int16u minorNumber = 1;
+  }
+
+  request struct SkipChannelRequest {
+    int16s count = 0;
+  }
+
+  request struct GetProgramGuideRequest {
+    optional epoch_s startTime = 0;
+    optional epoch_s endTime = 1;
+    optional ChannelInfoStruct channelList[] = 2;
+    optional PageTokenStruct pageToken = 3;
+    optional RecordingFlagBitmap recordingFlag = 4;
+    optional AdditionalInfoStruct externalIDList[] = 5;
+    optional octet_string data = 6;
+  }
+
+  response struct ProgramGuideResponse = 5 {
+    ChannelPagingStruct paging = 0;
+    ProgramStruct programList[] = 1;
+  }
+
+  request struct RecordProgramRequest {
+    char_string programIdentifier = 0;
+    boolean shouldRecordSeries = 1;
+    AdditionalInfoStruct externalIDList[] = 2;
+    octet_string data = 3;
+  }
+
+  request struct CancelRecordProgramRequest {
+    char_string programIdentifier = 0;
+    boolean shouldRecordSeries = 1;
+    AdditionalInfoStruct externalIDList[] = 2;
+    octet_string data = 3;
+  }
+
+  /** Change the channel on the media player to the channel case-insensitive exact matching the value passed as an argument. */
+  command ChangeChannel(ChangeChannelRequest): ChangeChannelResponse = 0;
+  /** Change the channel on the media plaeyer to the channel with the given Number in the ChannelList attribute. */
+  command ChangeChannelByNumber(ChangeChannelByNumberRequest): DefaultSuccess = 2;
+  /** This command provides channel up and channel down functionality, but allows channel index jumps of size Count. When the value of the increase or decrease is larger than the number of channels remaining in the given direction, then the behavior SHALL be to return to the beginning (or end) of the channel list and continue. For example, if the current channel is at index 0 and count value of -1 is given, then the current channel should change to the last channel. */
+  command SkipChannel(SkipChannelRequest): DefaultSuccess = 3;
+  /** This command retrieves the program guide. It accepts several filter parameters to return specific schedule and program information from a content app. The command shall receive in response a ProgramGuideResponse. */
+  command GetProgramGuide(GetProgramGuideRequest): ProgramGuideResponse = 4;
+  /** Record a specific program or series when it goes live. This functionality enables DVR recording features. */
+  command RecordProgram(RecordProgramRequest): DefaultSuccess = 6;
+  /** Cancel recording for a specific program or series. */
+  command CancelRecordProgram(CancelRecordProgramRequest): DefaultSuccess = 7;
+}
+
+/** This cluster provides an interface for UX navigation within a set of targets on a device or endpoint. */
+cluster TargetNavigator = 1285 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum StatusEnum : enum8 {
+    kSuccess = 0;
+    kTargetNotFound = 1;
+    kNotAllowed = 2;
+  }
+
+  struct TargetInfoStruct {
+    int8u identifier = 0;
+    char_string name = 1;
+  }
+
+  info event TargetUpdated = 0 {
+    TargetInfoStruct targetList[] = 0;
+    int8u currentTarget = 1;
+    octet_string data = 2;
+  }
+
+  readonly attribute TargetInfoStruct targetList[] = 0;
+  readonly attribute optional int8u currentTarget = 1;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct NavigateTargetRequest {
+    int8u target = 0;
+    optional char_string data = 1;
+  }
+
+  response struct NavigateTargetResponse = 1 {
+    StatusEnum status = 0;
+    optional char_string data = 1;
+  }
+
+  /** Upon receipt, this SHALL navigation the UX to the target identified. */
+  command NavigateTarget(NavigateTargetRequest): NavigateTargetResponse = 0;
+}
+
+/** This cluster provides an interface for controlling Media Playback (PLAY, PAUSE, etc) on a media device such as a TV or Speaker. */
+cluster MediaPlayback = 1286 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum CharacteristicEnum : enum8 {
+    kForcedSubtitles = 0;
+    kDescribesVideo = 1;
+    kEasyToRead = 2;
+    kFrameBased = 3;
+    kMainProgram = 4;
+    kOriginalContent = 5;
+    kVoiceOverTranslation = 6;
+    kCaption = 7;
+    kSubtitle = 8;
+    kAlternate = 9;
+    kSupplementary = 10;
+    kCommentary = 11;
+    kDubbedTranslation = 12;
+    kDescription = 13;
+    kMetadata = 14;
+    kEnhancedAudioIntelligibility = 15;
+    kEmergency = 16;
+    kKaraoke = 17;
+  }
+
+  enum PlaybackStateEnum : enum8 {
+    kPlaying = 0;
+    kPaused = 1;
+    kNotPlaying = 2;
+    kBuffering = 3;
+  }
+
+  enum StatusEnum : enum8 {
+    kSuccess = 0;
+    kInvalidStateForCommand = 1;
+    kNotAllowed = 2;
+    kNotActive = 3;
+    kSpeedOutOfRange = 4;
+    kSeekOutOfRange = 5;
+  }
+
+  bitmap Feature : bitmap32 {
+    kAdvancedSeek = 0x1;
+    kVariableSpeed = 0x2;
+    kTextTracks = 0x3;
+    kAudioTracks = 0x4;
+    kAudioAdvance = 0x5;
+  }
+
+  struct TrackAttributesStruct {
+    char_string<32> languageCode = 0;
+    optional nullable char_string displayName = 1;
+  }
+
+  struct TrackStruct {
+    char_string<32> id = 0;
+    nullable TrackAttributesStruct trackAttributes = 1;
+  }
+
+  struct PlaybackPositionStruct {
+    epoch_us updatedAt = 0;
+    nullable int64u position = 1;
+  }
+
+  info event StateChanged = 0 {
+    PlaybackStateEnum currentState = 0;
+    EPOCH_US startTime = 1;
+    INT64U duration = 2;
+    PlaybackPositionStruct sampledPosition = 3;
+    single playbackSpeed = 4;
+    INT64U seekRangeEnd = 5;
+    INT64U seekRangeStart = 6;
+    optional OCTET_STRING data = 7;
+    boolean audioAdvanceUnmuted = 8;
+  }
+
+  readonly attribute PlaybackStateEnum currentState = 0;
+  readonly attribute optional nullable epoch_us startTime = 1;
+  readonly attribute optional nullable int64u duration = 2;
+  readonly attribute optional nullable PlaybackPositionStruct sampledPosition = 3;
+  readonly attribute optional single playbackSpeed = 4;
+  readonly attribute optional nullable int64u seekRangeEnd = 5;
+  readonly attribute optional nullable int64u seekRangeStart = 6;
+  readonly attribute optional nullable TrackStruct activeAudioTrack = 7;
+  readonly attribute optional nullable TrackStruct availableAudioTracks[] = 8;
+  readonly attribute optional nullable TrackStruct activeTextTrack = 9;
+  readonly attribute optional nullable TrackStruct availableTextTracks[] = 10;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct RewindRequest {
+    optional boolean audioAdvanceUnmuted = 0;
+  }
+
+  request struct FastForwardRequest {
+    optional boolean audioAdvanceUnmuted = 0;
+  }
+
+  request struct SkipForwardRequest {
+    int64u deltaPositionMilliseconds = 0;
+  }
+
+  request struct SkipBackwardRequest {
+    int64u deltaPositionMilliseconds = 0;
+  }
+
+  response struct PlaybackResponse = 10 {
+    StatusEnum status = 0;
+    optional char_string data = 1;
+  }
+
+  request struct SeekRequest {
+    int64u position = 0;
+  }
+
+  request struct ActivateAudioTrackRequest {
+    CHAR_STRING trackID = 0;
+    INT8U audioOutputIndex = 1;
+  }
+
+  request struct ActivateTextTrackRequest {
+    CHAR_STRING trackID = 0;
+  }
+
+  /** Upon receipt, this SHALL play media. */
+  command Play(): PlaybackResponse = 0;
+  /** Upon receipt, this SHALL pause media. */
+  command Pause(): PlaybackResponse = 1;
+  /** Upon receipt, this SHALL stop media. User experience is context-specific. This will often navigate the user back to the location where media was originally launched. */
+  command Stop(): PlaybackResponse = 2;
+  /** Upon receipt, this SHALL Start Over with the current media playback item. */
+  command StartOver(): PlaybackResponse = 3;
+  /** Upon receipt, this SHALL cause the handler to be invoked for "Previous". User experience is context-specific. This will often Go back to the previous media playback item. */
+  command Previous(): PlaybackResponse = 4;
+  /** Upon receipt, this SHALL cause the handler to be invoked for "Next". User experience is context-specific. This will often Go forward to the next media playback item. */
+  command Next(): PlaybackResponse = 5;
+  /** Upon receipt, this SHALL Rewind through media. Different Rewind speeds can be used on the TV based upon the number of sequential calls to this function. This is to avoid needing to define every speed now (multiple fast, slow motion, etc). */
+  command Rewind(RewindRequest): PlaybackResponse = 6;
+  /** Upon receipt, this SHALL Advance through media. Different FF speeds can be used on the TV based upon the number of sequential calls to this function. This is to avoid needing to define every speed now (multiple fast, slow motion, etc). */
+  command FastForward(FastForwardRequest): PlaybackResponse = 7;
+  /** Upon receipt, this SHALL Skip forward in the media by the given number of seconds, using the data as follows: */
+  command SkipForward(SkipForwardRequest): PlaybackResponse = 8;
+  /** Upon receipt, this SHALL Skip backward in the media by the given number of seconds, using the data as follows: */
+  command SkipBackward(SkipBackwardRequest): PlaybackResponse = 9;
+  /** Upon receipt, this SHALL Skip backward in the media by the given number of seconds, using the data as follows: */
+  command Seek(SeekRequest): PlaybackResponse = 11;
+  /** Upon receipt, the server SHALL set the active Audio Track to the one identified by the TrackID in the Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not correspond to the streaming media OR no media is being streamed at the time of receipt of this command, the server will return an error status of INVALID_ARGUMENT. */
+  command ActivateAudioTrack(ActivateAudioTrackRequest): DefaultSuccess = 12;
+  /** Upon receipt, the server SHALL set the active Text Track to the one identified by the TrackID in the Track catalog for the streaming media. If the TrackID does not exist in the Track catalog, OR does not correspond to the streaming media OR no media is being streamed at the time of receipt of this command, the server SHALL return an error status of INVALID_ARGUMENT. */
+  command ActivateTextTrack(ActivateTextTrackRequest): DefaultSuccess = 13;
+  /** If a Text Track is active (i.e. being displayed), upon receipt of this command, the server SHALL stop displaying it. */
+  command DeactivateTextTrack(): DefaultSuccess = 14;
+}
+
+/** This cluster provides an interface for controlling the Input Selector on a media device such as a TV. */
+cluster MediaInput = 1287 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum InputTypeEnum : enum8 {
+    kInternal = 0;
+    kAux = 1;
+    kCoax = 2;
+    kComposite = 3;
+    kHDMI = 4;
+    kInput = 5;
+    kLine = 6;
+    kOptical = 7;
+    kVideo = 8;
+    kSCART = 9;
+    kUSB = 10;
+    kOther = 11;
+  }
+
+  bitmap Feature : bitmap32 {
+    kNameUpdates = 0x1;
+  }
+
+  struct InputInfoStruct {
+    int8u index = 0;
+    InputTypeEnum inputType = 1;
+    char_string name = 2;
+    char_string description = 3;
+  }
+
+  readonly attribute InputInfoStruct inputList[] = 0;
+  readonly attribute int8u currentInput = 1;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct SelectInputRequest {
+    int8u index = 0;
+  }
+
+  request struct RenameInputRequest {
+    int8u index = 0;
+    char_string name = 1;
+  }
+
+  /** Upon receipt, this SHALL change the input on the media device to the input at a specific index in the Input List. */
+  command SelectInput(SelectInputRequest): DefaultSuccess = 0;
+  /** Upon receipt, this SHALL display the active status of the input list on screen. */
+  command ShowInputStatus(): DefaultSuccess = 1;
+  /** Upon receipt, this SHALL hide the input list from the screen. */
+  command HideInputStatus(): DefaultSuccess = 2;
+  /** Upon receipt, this SHALL rename the input at a specific index in the Input List. Updates to the input name SHALL appear in the TV settings menus. */
+  command access(invoke: manage) RenameInput(RenameInputRequest): DefaultSuccess = 3;
+}
+
 /** This cluster provides an interface for managing low power mode on a device. */
 cluster LowPower = 1288 {
   revision 1; // NOTE: Default/not specifically set
@@ -8310,6 +8744,177 @@ cluster LowPower = 1288 {
 
   /** This command shall put the device into low power mode. */
   command Sleep(): DefaultSuccess = 0;
+}
+
+/** This cluster provides an interface for controlling a device like a TV using action commands such as UP, DOWN, and SELECT. */
+cluster KeypadInput = 1289 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum CECKeyCodeEnum : enum8 {
+    kSelect = 0;
+    kUp = 1;
+    kDown = 2;
+    kLeft = 3;
+    kRight = 4;
+    kRightUp = 5;
+    kRightDown = 6;
+    kLeftUp = 7;
+    kLeftDown = 8;
+    kRootMenu = 9;
+    kSetupMenu = 10;
+    kContentsMenu = 11;
+    kFavoriteMenu = 12;
+    kExit = 13;
+    kMediaTopMenu = 16;
+    kMediaContextSensitiveMenu = 17;
+    kNumberEntryMode = 29;
+    kNumber11 = 30;
+    kNumber12 = 31;
+    kNumber0OrNumber10 = 32;
+    kNumbers1 = 33;
+    kNumbers2 = 34;
+    kNumbers3 = 35;
+    kNumbers4 = 36;
+    kNumbers5 = 37;
+    kNumbers6 = 38;
+    kNumbers7 = 39;
+    kNumbers8 = 40;
+    kNumbers9 = 41;
+    kDot = 42;
+    kEnter = 43;
+    kClear = 44;
+    kNextFavorite = 47;
+    kChannelUp = 48;
+    kChannelDown = 49;
+    kPreviousChannel = 50;
+    kSoundSelect = 51;
+    kInputSelect = 52;
+    kDisplayInformation = 53;
+    kHelp = 54;
+    kPageUp = 55;
+    kPageDown = 56;
+    kPower = 64;
+    kVolumeUp = 65;
+    kVolumeDown = 66;
+    kMute = 67;
+    kPlay = 68;
+    kStop = 69;
+    kPause = 70;
+    kRecord = 71;
+    kRewind = 72;
+    kFastForward = 73;
+    kEject = 74;
+    kForward = 75;
+    kBackward = 76;
+    kStopRecord = 77;
+    kPauseRecord = 78;
+    kReserved = 79;
+    kAngle = 80;
+    kSubPicture = 81;
+    kVideoOnDemand = 82;
+    kElectronicProgramGuide = 83;
+    kTimerProgramming = 84;
+    kInitialConfiguration = 85;
+    kSelectBroadcastType = 86;
+    kSelectSoundPresentation = 87;
+    kPlayFunction = 96;
+    kPausePlayFunction = 97;
+    kRecordFunction = 98;
+    kPauseRecordFunction = 99;
+    kStopFunction = 100;
+    kMuteFunction = 101;
+    kRestoreVolumeFunction = 102;
+    kTuneFunction = 103;
+    kSelectMediaFunction = 104;
+    kSelectAvInputFunction = 105;
+    kSelectAudioInputFunction = 106;
+    kPowerToggleFunction = 107;
+    kPowerOffFunction = 108;
+    kPowerOnFunction = 109;
+    kF1Blue = 113;
+    kF2Red = 114;
+    kF3Green = 115;
+    kF4Yellow = 116;
+    kF5 = 117;
+    kData = 118;
+  }
+
+  enum StatusEnum : enum8 {
+    kSuccess = 0;
+    kUnsupportedKey = 1;
+    kInvalidKeyInCurrentState = 2;
+  }
+
+  bitmap Feature : bitmap32 {
+    kNavigationKeyCodes = 0x1;
+    kLocationKeys = 0x2;
+    kNumberKeys = 0x4;
+  }
+
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct SendKeyRequest {
+    CECKeyCodeEnum keyCode = 0;
+  }
+
+  response struct SendKeyResponse = 1 {
+    StatusEnum status = 0;
+  }
+
+  /** Upon receipt, this SHALL process a keycode as input to the media device. */
+  command SendKey(SendKeyRequest): SendKeyResponse = 0;
+}
+
+/** This cluster provides an interface for controlling the Output on a media device such as a TV. */
+cluster AudioOutput = 1291 {
+  revision 1; // NOTE: Default/not specifically set
+
+  enum OutputTypeEnum : enum8 {
+    kHDMI = 0;
+    kBT = 1;
+    kOptical = 2;
+    kHeadphone = 3;
+    kInternal = 4;
+    kOther = 5;
+  }
+
+  bitmap Feature : bitmap32 {
+    kNameUpdates = 0x1;
+  }
+
+  struct OutputInfoStruct {
+    int8u index = 0;
+    OutputTypeEnum outputType = 1;
+    char_string name = 2;
+  }
+
+  readonly attribute OutputInfoStruct outputList[] = 0;
+  readonly attribute int8u currentOutput = 1;
+  readonly attribute command_id generatedCommandList[] = 65528;
+  readonly attribute command_id acceptedCommandList[] = 65529;
+  readonly attribute event_id eventList[] = 65530;
+  readonly attribute attrib_id attributeList[] = 65531;
+  readonly attribute bitmap32 featureMap = 65532;
+  readonly attribute int16u clusterRevision = 65533;
+
+  request struct SelectOutputRequest {
+    int8u index = 0;
+  }
+
+  request struct RenameOutputRequest {
+    int8u index = 0;
+    char_string name = 1;
+  }
+
+  /** Upon receipt, this SHALL change the output on the media device to the output at a specific index in the Output List. */
+  command SelectOutput(SelectOutputRequest): DefaultSuccess = 0;
+  /** Upon receipt, this SHALL rename the output at a specific index in the Output List. Updates to the output name SHALL appear in the TV settings menus. */
+  command access(invoke: manage) RenameOutput(RenameOutputRequest): DefaultSuccess = 1;
 }
 
 /** Attributes related to the electrical properties of a device. This cluster is used by power outlets and other devices that need to provide instantaneous data as opposed to metrology data which should be retrieved from the metering cluster.. */
@@ -12604,6 +13209,137 @@ endpoint 94 {
     callback attribute attributeList;
     ram      attribute featureMap default = 0;
     ram      attribute clusterRevision default = 4;
+  }
+}
+endpoint 102 {
+  device type ma_basic_videoplayer = 40, version 1;
+
+
+  server cluster OnOff {
+    ram      attribute onOff default = 0;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 6;
+
+    handle command Off;
+    handle command On;
+    handle command Toggle;
+  }
+
+  server cluster Descriptor {
+    callback attribute deviceTypeList;
+    callback attribute serverList;
+    callback attribute clientList;
+    callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    callback attribute clusterRevision;
+  }
+
+  server cluster WakeOnLan {
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+  }
+
+  server cluster Channel {
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command ChangeChannelByNumber;
+    handle command SkipChannel;
+  }
+
+  server cluster TargetNavigator {
+    callback attribute targetList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command NavigateTarget;
+    handle command NavigateTargetResponse;
+  }
+
+  server cluster MediaPlayback {
+    ram      attribute currentState default = 0x00;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command Play;
+    handle command Pause;
+    handle command Stop;
+    handle command PlaybackResponse;
+  }
+
+  server cluster MediaInput {
+    callback attribute inputList;
+    ram      attribute currentInput default = 0x00;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command SelectInput;
+    handle command ShowInputStatus;
+    handle command HideInputStatus;
+  }
+
+  server cluster LowPower {
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command Sleep;
+  }
+
+  server cluster KeypadInput {
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command SendKey;
+    handle command SendKeyResponse;
+  }
+
+  server cluster AudioOutput {
+    callback attribute outputList;
+    ram      attribute currentOutput default = 0x00;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+
+    handle command SelectOutput;
   }
 }
 
