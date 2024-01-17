@@ -1,5 +1,4 @@
 skipped:
-95 AirQuality Sensor (Code error)
 101 Video Player Architecture (can not find)
 103 Casting Video Player (link error)
 134 Temerature Controlled Cabinet (unknown error)
