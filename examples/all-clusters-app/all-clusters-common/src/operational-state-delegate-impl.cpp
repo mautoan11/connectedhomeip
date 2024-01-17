@@ -152,14 +152,21 @@ void RvcOperationalState::Shutdown()
 
 void emberAfRvcOperationalStateClusterInitCallback(chip::EndpointId endpointId)
 {
-    VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
-    VerifyOrDie(gRvcOperationalStateInstance == nullptr && gRvcOperationalStateDelegate == nullptr);
-
-    gRvcOperationalStateDelegate        = new RvcOperationalStateDelegate;
-    EndpointId operationalStateEndpoint = 0x01;
-    gRvcOperationalStateInstance        = new RvcOperationalState::Instance(gRvcOperationalStateDelegate, operationalStateEndpoint);
-
-    gRvcOperationalStateInstance->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
-
-    gRvcOperationalStateInstance->Init();
+    
+    if(gRvcOperationalStateInstance == nullptr)
+    {
+        gRvcOperationalStateDelegate        = new RvcOperationalStateDelegate;
+        EndpointId operationalStateEndpoint = endpointId;
+        gRvcOperationalStateInstance        = new RvcOperationalState::Instance(gRvcOperationalStateDelegate, operationalStateEndpoint);
+        gRvcOperationalStateInstance->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
+        gRvcOperationalStateInstance->Init();
+    }
+    else
+    {
+        RvcOperationalStateDelegate* gRvcOperationalStateDelegate2        = new RvcOperationalStateDelegate;
+        EndpointId operationalStateEndpoint2 = endpointId;
+        RvcOperationalState::Instance* gRvcOperationalStateInstance2        = new RvcOperationalState::Instance(gRvcOperationalStateDelegate2, operationalStateEndpoint2);
+        gRvcOperationalStateInstance2->SetOperationalState(to_underlying(OperationalState::OperationalStateEnum::kStopped));
+        gRvcOperationalStateInstance2->Init();
+    }
 }
