@@ -14789,5 +14789,45 @@ endpoint 106 {
     ram      attribute clusterRevision default = 1;
   }
 }
+endpoint 107 {
+  device type ma_video_remotecontrol = 42, version 1;
+
+  binding cluster OnOff;
+  binding cluster LevelControl;
+  binding cluster WakeOnLan;
+  binding cluster Channel;
+  binding cluster TargetNavigator;
+  binding cluster MediaPlayback;
+  binding cluster MediaInput;
+  binding cluster LowPower;
+  binding cluster KeypadInput;
+  binding cluster ContentLauncher;
+  binding cluster AudioOutput;
+  binding cluster ApplicationLauncher;
+  binding cluster AccountLogin;
+
+  server cluster Descriptor {
+    callback attribute deviceTypeList;
+    callback attribute serverList;
+    callback attribute clientList;
+    callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    callback attribute clusterRevision;
+  }
+
+  server cluster Binding {
+    callback attribute binding;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+  }
+}
 
 
