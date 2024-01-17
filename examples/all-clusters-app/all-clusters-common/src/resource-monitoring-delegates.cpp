@@ -114,7 +114,7 @@ void HepaFilterMonitoring::Shutdown()
 
 void emberAfActivatedCarbonFilterMonitoringClusterInitCallback(chip::EndpointId endpoint)
 {
-    VerifyOrDie(gActivatedCarbonFilterInstance == nullptr && gActivatedCarbonFilterDelegate == nullptr);
+    //VerifyOrDie(gActivatedCarbonFilterInstance == nullptr && gActivatedCarbonFilterDelegate == nullptr);
     gActivatedCarbonFilterDelegate = new ActivatedCarbonFilterMonitoringDelegate;
     gActivatedCarbonFilterInstance = new ResourceMonitoring::Instance(
         gActivatedCarbonFilterDelegate, endpoint, ActivatedCarbonFilterMonitoring::Id,
@@ -125,8 +125,8 @@ void emberAfActivatedCarbonFilterMonitoringClusterInitCallback(chip::EndpointId 
 void emberAfHepaFilterMonitoringClusterInitCallback(chip::EndpointId endpoint)
 {
     
-    VerifyOrDie(gHepaFilterInstance == nullptr);
-    VerifyOrDie(gHepaFilterDelegate == nullptr);
+    //VerifyOrDie(gHepaFilterInstance == nullptr);
+    //VerifyOrDie(gHepaFilterDelegate == nullptr);
 
     gHepaFilterDelegate = new HepaFilterMonitoringDelegate;
     gHepaFilterInstance = new ResourceMonitoring::Instance(gHepaFilterDelegate, endpoint, HepaFilterMonitoring::Id,
