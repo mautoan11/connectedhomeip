@@ -15039,5 +15039,36 @@ endpoint 133 {
     handle command SetpointRaiseLower;
   }
 }
+endpoint 145 {
+  device type ma_dishwasher = 117, version 1;
+
+
+  server cluster Descriptor {
+    callback attribute deviceTypeList;
+    callback attribute serverList;
+    callback attribute clientList;
+    callback attribute partsList;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    callback attribute clusterRevision;
+  }
+
+  server cluster OperationalState {
+    callback attribute phaseList;
+    callback attribute currentPhase;
+    callback attribute operationalStateList;
+    callback attribute operationalState;
+    callback attribute operationalError;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+  }
+}
 
 
