@@ -12685,7 +12685,8 @@ endpoint 42 {
   server cluster LevelControl {
     ram      attribute currentLevel default = 0x00;
     ram      attribute remainingTime default = 0x0000;
-    ram      attribute minLevel default = 0x00;
+    ram      attribute minLevel default = 0x01;
+    ram      attribute maxLevel default = 0xFE;
     ram      attribute options default = 0x00;
     ram      attribute onLevel;
     ram      attribute startUpCurrentLevel;

@@ -18,7 +18,8 @@
 
 CHIP_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"/../../../../..
 echo "$CHIP_ROOT"
-INPUT_ZAP="$CHIP_ROOT/src/controller/data_model/controller-clusters.zap"
+#INPUT_ZAP="$CHIP_ROOT/src/controller/data_model/controller-clusters.zap"
+INPUT_ZAP="$CHIP_ROOT/examples/all-clusters-app/all-clusters-common/all-clusters-app.zap"
 INPUT_TEMPLATE="$CHIP_ROOT/src/app/tests/suites/examples/templates/templates.json"
 OUTPUT_DIR="$CHIP_ROOT/src/app/tests/suites/examples/out"
 
