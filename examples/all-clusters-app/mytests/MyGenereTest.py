@@ -132,7 +132,9 @@ def GenerateTest(nodeId, endpointId, folder):
 GenerateTest(1111,41,'OO')
 GenerateTest(1111,42,'OO')
 GenerateTest(1111,42,'LVL')
-
+GenerateTest(1111,43,'OO')
+GenerateTest(1111,43,'LVL')
+GenerateTest(1111,43,'CC')
 
 # config:
 #     nodeId: 1111
