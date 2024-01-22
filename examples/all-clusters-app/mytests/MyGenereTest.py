@@ -18,9 +18,9 @@ def GenerateTest(nodeId, endpointId, folder):
         with open(mypath+filename) as f:
             contents = f.read()
         contents = str(contents)
-        nodeIdIndex = contents.find('nodeId:') + 7
-        clusterIndex = contents.find('cluster:') +8
-        endpointIndex = contents.find('endpoint:') + 9
+        nodeIdIndex = contents.find('nodeId:') + 8
+        clusterIndex = contents.find('cluster:') +9
+        endpointIndex = contents.find('endpoint:') + 10
         nodeIdIndex_End = nodeIdIndex
         clusterIndex_End = clusterIndex
         endpointIndex_End = endpointIndex
@@ -74,7 +74,9 @@ def GenerateTest(nodeId, endpointId, folder):
 
 
     for generatedTestFile in generatedTestFiles:
-        contents.append(f"\t{generatedTestFile}\n")
+        ss=generatedTestFile.replace('.yaml','')
+        ss=f"\t./scripts/tests/yaml/chiptool.py tests {generatedTestFile}\n"
+        contents.append(ss)
     
     text_file = open(makeFilePath, "w")
     for content in contents:
