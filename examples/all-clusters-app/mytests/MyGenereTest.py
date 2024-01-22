@@ -6,15 +6,17 @@ from os import walk
 
 allTestLablels = []
 def GenerateTest(nodeId, endpointId, folder):
+    
     mypath = 'examples/all-clusters-app/mytests/Samples/' + folder + '/'
     mypathOutput = 'examples/all-clusters-app/mytests/'
     filenames = []
     for (dirpath, dirnames, filenames_) in walk(mypath):
         filenames.extend(filenames_)
         break
-    print(filenames)
+    
     generatedTestFiles = []
     for filename in filenames:
+        if filename[len(filename)-4:len(filename)] != 'yaml': continue
         with open(mypath+filename) as f:
             contents = f.read()
         contents = str(contents)
@@ -46,7 +48,7 @@ def GenerateTest(nodeId, endpointId, folder):
 
     #Handle make file
     makeFilePath = 'Makefile'
-    label = f"test_{nodeId}_{endpointId}"
+    label = f"test_{nodeId}_{endpointId}_{folder}"
     with open(makeFilePath) as f:
         contents = f.readlines()
 
@@ -62,17 +64,19 @@ def GenerateTest(nodeId, endpointId, folder):
             if contents[i][0] == '\t':
                 removingLineIndexs.append(i)
             else: break
+
     for i in range(len(contents)): 
         if contents[i].find('testall:') ==0:
             removingLineIndexs.append(i)
-            break
+        if contents[i].find(f'test_{nodeId}_{endpointId}:') ==0:
+            removingLineIndexs.append(i)
 
-    print(removingLineIndexs)
+
+   
 
     for i in sorted(removingLineIndexs, reverse=True):
         del contents[i]
 
-    print(contents[-1]," len=", len(contents[-1]))
 
 
     if len(contents[-1]) > 0 and contents[-1][-1] != '\n':
@@ -80,33 +84,54 @@ def GenerateTest(nodeId, endpointId, folder):
     else : contents.append(f"{label}:\n")
     allTestLablels.append(label)
     
+    
     for generatedTestFile in generatedTestFiles:
         ss=generatedTestFile.replace('.yaml','')
         ss=f"\t./scripts/tests/yaml/chiptool.py tests {generatedTestFile}\n"
         
         contents.append(ss)
     
-
+    #testall
     testAllString = "testall: "
+    testAllString_eachDevice = {}
     for labbb in allTestLablels:
         testAllString += f"{labbb} " 
+        vals = labbb.split('_')
+        val_key = vals[0] + '_'+vals[1] + '_' + vals[2]
+
+        if labbb.find(f"test_{nodeId}_{endpointId}") !=0: continue
+
+        if val_key not in testAllString_eachDevice:
+            testAllString_eachDevice[val_key] = [labbb]
+        else: testAllString_eachDevice[val_key].append(labbb)
+
+    
+    
+    for k,v in testAllString_eachDevice.items():
+
+        ss = k + ':'
+        for vv in v:
+            ss += ' ' + vv
+        ss += '\n' 
+        
+        contents.append(ss)
+
+
     contents.append(testAllString + "\n")
+    #testeach endpoint
+
 
     text_file = open(makeFilePath, "w")
-
     for content in contents:
         text_file.write(content)
     text_file.close()
 
-
-
-
-
-        
+    
 
 
 GenerateTest(1111,41,'OO')
 GenerateTest(1111,42,'OO')
+GenerateTest(1111,42,'LVL')
 
 
 # config:

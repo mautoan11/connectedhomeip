@@ -23,16 +23,25 @@ test2:
 	./scripts/tests/yaml/chiptool.py tests Test_Device_44
 testgen:
 	python ./examples/all-clusters-app/mytests/MyGenereTest.py
-test_1111_41:
+test_1111_41_OO:
 	./scripts/tests/yaml/chiptool.py tests test_1111_41_Test_TC_OO_1_1.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_41_Test_TC_OO_2_3.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_41_Test_TC_OO_2_1.yaml
-	./scripts/tests/yaml/chiptool.py tests test_1111_41_Test_TC_OO_2_4.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_41_Test_TC_OO_2_2.yaml
-test_1111_42:
+test_1111_41: test_1111_41_OO
+test_1111_42_OO:
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_1_1.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_3.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_1.yaml
-	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_4.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_2.yaml
-testall: test_1111_41 test_1111_42 
+test_1111_42_LVL:
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_2_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_5_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_6_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_7_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_1_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_3_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_4_1.yaml
+	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_LVL_2_2.yaml
+test_1111_42: test_1111_42_OO test_1111_42_LVL
+testall: test_1111_41_OO test_1111_42_OO test_1111_42_LVL 
