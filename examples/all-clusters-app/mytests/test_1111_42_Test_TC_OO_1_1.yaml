@@ -18,9 +18,9 @@ PICS:
     - OO.S
 
 config:
-    nodeId: 1111
+    nodeId:1111
     cluster: "On/Off"
-    endpoint: 1
+    endpoint:42
 
 tests:
     - label: "Step 1: Wait for the commissioned device to be retrieved"

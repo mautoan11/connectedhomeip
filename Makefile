@@ -17,8 +17,21 @@ test42:
 	./scripts/tests/yaml/chiptool.py tests Test_Device_42_2_3
 	./scripts/tests/yaml/chiptool.py tests Test_Device_42
 test2: 
-	
 	./scripts/tests/yaml/chiptool.py tests BBB
 	./scripts/tests/yaml/chiptool.py tests Test_Device_42_2
 	./scripts/tests/yaml/chiptool.py tests Test_Device_43
 	./scripts/tests/yaml/chiptool.py tests Test_Device_44
+testgen:
+	python ./examples/all-clusters-app/mytests/MyGenereTest.py
+test_1111_41:
+	test_1111_41_Test_TC_OO_1_1.yaml
+	test_1111_41_Test_TC_OO_2_3.yaml
+	test_1111_41_Test_TC_OO_2_1.yaml
+	test_1111_41_Test_TC_OO_2_4.yaml
+	test_1111_41_Test_TC_OO_2_2.yaml
+test_1111_42:
+	test_1111_42_Test_TC_OO_1_1.yaml
+	test_1111_42_Test_TC_OO_2_3.yaml
+	test_1111_42_Test_TC_OO_2_1.yaml
+	test_1111_42_Test_TC_OO_2_4.yaml
+	test_1111_42_Test_TC_OO_2_2.yaml
