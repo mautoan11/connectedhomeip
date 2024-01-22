@@ -4,7 +4,7 @@ from os.path import isfile, join
 from os import walk
 #from parse import *
 
-
+allTestLablels = []
 def GenerateTest(nodeId, endpointId, folder):
     mypath = 'examples/all-clusters-app/mytests/Samples/' + folder + '/'
     mypathOutput = 'examples/all-clusters-app/mytests/'
@@ -43,6 +43,8 @@ def GenerateTest(nodeId, endpointId, folder):
         text_file.close()
         generatedTestFiles.append(newTestFileName)
 
+
+    #Handle make file
     makeFilePath = 'Makefile'
     label = f"test_{nodeId}_{endpointId}"
     with open(makeFilePath) as f:
@@ -60,6 +62,11 @@ def GenerateTest(nodeId, endpointId, folder):
             if contents[i][0] == '\t':
                 removingLineIndexs.append(i)
             else: break
+    for i in range(len(contents)): 
+        if contents[i].find('testall:') ==0:
+            removingLineIndexs.append(i)
+            break
+
     print(removingLineIndexs)
 
     for i in sorted(removingLineIndexs, reverse=True):
@@ -71,17 +78,26 @@ def GenerateTest(nodeId, endpointId, folder):
     if len(contents[-1]) > 0 and contents[-1][-1] != '\n':
         contents.append(f"\n{label}:\n")
     else : contents.append(f"{label}:\n")
-
-
+    allTestLablels.append(label)
+    
     for generatedTestFile in generatedTestFiles:
         ss=generatedTestFile.replace('.yaml','')
         ss=f"\t./scripts/tests/yaml/chiptool.py tests {generatedTestFile}\n"
+        
         contents.append(ss)
     
+
+    testAllString = "testall: "
+    for labbb in allTestLablels:
+        testAllString += f"{labbb} " 
+    contents.append(testAllString + "\n")
+
     text_file = open(makeFilePath, "w")
+
     for content in contents:
         text_file.write(content)
     text_file.close()
+
 
 
 

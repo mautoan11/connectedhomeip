@@ -35,3 +35,4 @@ test_1111_42:
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_1.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_4.yaml
 	./scripts/tests/yaml/chiptool.py tests test_1111_42_Test_TC_OO_2_2.yaml
+testall: test_1111_41 test_1111_42 
