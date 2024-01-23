@@ -91,10 +91,19 @@ void RefrigeratorAndTemperatureControlledCabinetMode::Shutdown()
 
 void emberAfRefrigeratorAndTemperatureControlledCabinetModeClusterInitCallback(chip::EndpointId endpointId)
 {
-    VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
-    VerifyOrDie(gTccModeDelegate == nullptr && gTccModeInstance == nullptr);
-    gTccModeDelegate = new RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate;
-    gTccModeInstance = new ModeBase::Instance(gTccModeDelegate, 0x1, RefrigeratorAndTemperatureControlledCabinetMode::Id,
-                                              chip::to_underlying(Feature::kOnOff));
-    gTccModeInstance->Init();
+    
+    if(gTccModeDelegate == nullptr && gTccModeInstance == nullptr)
+    {
+        gTccModeDelegate = new RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate;
+        gTccModeInstance = new ModeBase::Instance(gTccModeDelegate, 0x1, RefrigeratorAndTemperatureControlledCabinetMode::Id,
+                                                chip::to_underlying(Feature::kOnOff));
+        gTccModeInstance->Init();
+    }
+    else
+    {
+        RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate* gTccModeDelegate2 = new RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate;
+        ModeBase::Instance* gTccModeInstance2 = new ModeBase::Instance(gTccModeDelegate2, 0x1, RefrigeratorAndTemperatureControlledCabinetMode::Id,
+                                                chip::to_underlying(Feature::kOnOff));
+        gTccModeInstance2->Init();
+    }
 }

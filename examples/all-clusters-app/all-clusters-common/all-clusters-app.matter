@@ -15329,6 +15329,29 @@ endpoint 132 {
     ram      attribute featureMap default = 0;
     callback attribute clusterRevision;
   }
+
+  server cluster RefrigeratorAndTemperatureControlledCabinetMode {
+    callback attribute supportedModes;
+    callback attribute currentMode;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    callback attribute featureMap;
+    ram      attribute clusterRevision default = 2;
+  }
+
+  server cluster RefrigeratorAlarm {
+    ram      attribute mask default = 0;
+    ram      attribute state default = 0;
+    ram      attribute supported default = 0;
+    callback attribute generatedCommandList;
+    callback attribute acceptedCommandList;
+    callback attribute eventList;
+    callback attribute attributeList;
+    ram      attribute featureMap default = 0;
+    ram      attribute clusterRevision default = 1;
+  }
 }
 endpoint 133 {
   device type ma_room_airconditioner = 114, version 1;
