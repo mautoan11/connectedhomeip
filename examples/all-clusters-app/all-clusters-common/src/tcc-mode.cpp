@@ -95,14 +95,14 @@ void emberAfRefrigeratorAndTemperatureControlledCabinetModeClusterInitCallback(c
     if(gTccModeDelegate == nullptr && gTccModeInstance == nullptr)
     {
         gTccModeDelegate = new RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate;
-        gTccModeInstance = new ModeBase::Instance(gTccModeDelegate, 0x1, RefrigeratorAndTemperatureControlledCabinetMode::Id,
+        gTccModeInstance = new ModeBase::Instance(gTccModeDelegate, endpointId, RefrigeratorAndTemperatureControlledCabinetMode::Id,
                                                 chip::to_underlying(Feature::kOnOff));
         gTccModeInstance->Init();
     }
     else
     {
         RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate* gTccModeDelegate2 = new RefrigeratorAndTemperatureControlledCabinetMode::TccModeDelegate;
-        ModeBase::Instance* gTccModeInstance2 = new ModeBase::Instance(gTccModeDelegate2, 0x1, RefrigeratorAndTemperatureControlledCabinetMode::Id,
+        ModeBase::Instance* gTccModeInstance2 = new ModeBase::Instance(gTccModeDelegate2, endpointId, RefrigeratorAndTemperatureControlledCabinetMode::Id,
                                                 chip::to_underlying(Feature::kOnOff));
         gTccModeInstance2->Init();
     }

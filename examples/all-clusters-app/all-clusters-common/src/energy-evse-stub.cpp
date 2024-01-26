@@ -27,7 +27,7 @@ static EnergyEvseManager * gInstance  = nullptr;
 
 void emberAfEnergyEvseClusterInitCallback(chip::EndpointId endpointId)
 {
-    VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
+    //VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
     VerifyOrDie(gInstance == nullptr);
     gDelegate = new EnergyEvseDelegate();
     if (gDelegate != nullptr)

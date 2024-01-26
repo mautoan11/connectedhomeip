@@ -169,10 +169,10 @@ CHIP_ERROR FanControlManager::Read(const ConcreteReadAttributePath & aPath, Attr
 
 } // anonymous namespace
 
-void emberAfFanControlClusterInitCallback(EndpointId endpoint)
-{
+ void emberAfFanControlClusterInitCallback(EndpointId endpoint)
+ {
     
-    //VerifyOrDie(mFanControlManager == nullptr);
+//     //VerifyOrDie(mFanControlManager == nullptr);
 
     if(mFanControlManager == nullptr)
     {
