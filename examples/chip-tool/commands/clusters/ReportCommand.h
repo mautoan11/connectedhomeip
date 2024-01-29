@@ -94,8 +94,11 @@ public:
             mError = error;
             return;
         }
-        int c = 0; int d =0;
-        printf("%d",c/d);
+        // int c = 0; int d =0;
+        // printf("%d",c/d);
+
+        
+        InteractiveServerCommand::instance->mWebSocketServer.Send("toanstt test");
         printf("====================================================================\n");
     }
 

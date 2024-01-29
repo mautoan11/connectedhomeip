@@ -400,3 +400,5 @@ bool InteractiveCommand::NeedsOperationalAdvertising()
 {
     return mAdvertiseOperational.ValueOr(true);
 }
+
+InteractiveServerCommand* InteractiveServerCommand::instance = nullptr;
