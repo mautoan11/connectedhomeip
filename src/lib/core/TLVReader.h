@@ -939,9 +939,11 @@ public:
      */
     void * AppData;
 
+    public:
+    uint64_t mElemLenOrVal;
 protected:
     Tag mElemTag;
-    uint64_t mElemLenOrVal;
+    
     TLVBackingStore * mBackingStore;
     const uint8_t * mReadPoint;
     const uint8_t * mBufEnd;
@@ -966,6 +968,7 @@ protected:
     CHIP_ERROR EnsureData(CHIP_ERROR noDataErr);
     CHIP_ERROR ReadData(uint8_t * buf, uint32_t len);
     CHIP_ERROR GetElementHeadLength(uint8_t & elemHeadBytes) const;
+    public:
     TLVElementType ElementType() const;
 };
 

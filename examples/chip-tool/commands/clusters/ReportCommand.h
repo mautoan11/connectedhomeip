@@ -34,6 +34,8 @@ public:
     void OnAttributeData(const chip::app::ConcreteDataAttributePath & path, chip::TLV::TLVReader * data,
                          const chip::app::StatusIB & status) override
     {
+
+        printf("====================================================================\n");
         CHIP_ERROR error = status.ToChipError();
         if (CHIP_NO_ERROR != error)
         {
@@ -62,10 +64,27 @@ public:
         chip::app::DataModel::Decode(*data, value);
         printf("\n\n DATA  %s data_length= %ld \n\n",std::string(value.data(), value.size()).c_str(), value.size());
 
+        
+        //onoff subscribe on-off 5 10 3333 1
+
+
+        chip::ByteSpan valuebyte;
+        data->Get(valuebyte);
+        printf("\n\n DATA  __ data_length= %ld \n\n", valuebyte.size());
+
+        printf("\n\n data length= %d mElemLenOrVal = %ld \n\n", data->GetLength(), data->mElemLenOrVal);
+
         bool valueb;
         chip::app::DataModel::Decode(*data, valueb);
-        printf("\n\n DATA BOOL  %s  \n\n",valueb==true?"TRUE":"FALSE");
+        printf("\n\n DATA BOOL1  %s  \n\n",valueb==true?"TRUE":"FALSE");
 
+
+        
+        data->Get(valueb);
+        printf("\n\n DATA BOOL2  %s  \n\n",valueb==true?"TRUE":"FALSE");
+
+        int8_t tLVElementType = (int8_t)data->ElementType();
+        printf("\n\n tLVElementType:  %d  \n\n",tLVElementType);
 
 
         error = DataModelLogger::LogAttribute(path, data);
@@ -75,6 +94,9 @@ public:
             mError = error;
             return;
         }
+        int c = 0; int d =0;
+        printf("%d",c/d);
+        printf("====================================================================\n");
     }
 
     void OnEventData(const chip::app::EventHeader & eventHeader, chip::TLV::TLVReader * data,
