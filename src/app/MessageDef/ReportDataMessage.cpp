@@ -43,6 +43,9 @@ CHIP_ERROR ReportDataMessage::Parser::PrettyPrint() const
     AttributeReportIBs::Parser attributeReportIBs;
     EventReportIBs::Parser eventReportIBs;
 
+    //int c =0;
+    //int d =0;
+    //printf("%d",c/d);
     PRETTY_PRINT("ReportDataMessage =");
     PRETTY_PRINT("{");
 

@@ -12,9 +12,15 @@ chip-tool-server:
 	scripts/examples/gn_build_example.sh examples/chip-tool ../chip-tool/
 	../chip-tool/chip-tool interactive server --port 9003
 chip-tool-interactive:
-	rm ../chip-tool/chip-tool
+	rm -f ../chip-tool/chip-tool
 	scripts/examples/gn_build_example.sh examples/chip-tool ../chip-tool/
 	../chip-tool/chip-tool interactive start
+	onoff subscribe on-off 5 10 3333 1
+chip-tool-interactive-gdb:
+	rm -f ../chip-tool/chip-tool
+	scripts/examples/gn_build_example.sh examples/chip-tool ../chip-tool/
+	gdb --args ../chip-tool/chip-tool interactive start
+	onoff subscribe on-off 5 10 3333 1
 
 test: 
 	./scripts/tests/yaml/chiptool.py tests Test_Device_41

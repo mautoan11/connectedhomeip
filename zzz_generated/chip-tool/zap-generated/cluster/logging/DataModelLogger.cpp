@@ -7329,6 +7329,9 @@ CHIP_ERROR DataModelLogger::LogValue(const char * label, size_t indent,
 
 CHIP_ERROR DataModelLogger::LogAttribute(const chip::app::ConcreteDataAttributePath & path, chip::TLV::TLVReader * data)
 {
+    //printf("\n\n\n TOAN \n\n");
+    //int c =0; int d = 0;
+    //printf("\n\n\n TOAN %d \n\n",c/d);
     ChipLogProgress(chipTool, "Endpoint: %u Cluster: " ChipLogFormatMEI " Attribute " ChipLogFormatMEI " DataVersion: %" PRIu32,
                     path.mEndpointId, ChipLogValueMEI(path.mClusterId), ChipLogValueMEI(path.mAttributeId),
                     path.mDataVersion.ValueOr(0));

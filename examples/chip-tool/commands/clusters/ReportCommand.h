@@ -53,6 +53,21 @@ public:
 
         LogErrorOnFailure(RemoteDataModelLogger::LogAttributeAsJSON(path, data));
 
+
+        uint mEndpointId = path.mEndpointId;
+        uint mClusterId = path.mClusterId;
+        uint mAttributeId = path.mAttributeId;
+        printf("\n\n TOANLOG: \nmEndpointId = %d, mClusterId=%d, mAttributeId=%d \n\n",mEndpointId,mClusterId, mAttributeId );
+        chip::CharSpan value;
+        chip::app::DataModel::Decode(*data, value);
+        printf("\n\n DATA  %s data_length= %ld \n\n",std::string(value.data(), value.size()).c_str(), value.size());
+
+        bool valueb;
+        chip::app::DataModel::Decode(*data, valueb);
+        printf("\n\n DATA BOOL  %s  \n\n",valueb==true?"TRUE":"FALSE");
+
+
+
         error = DataModelLogger::LogAttribute(path, data);
         if (CHIP_NO_ERROR != error)
         {

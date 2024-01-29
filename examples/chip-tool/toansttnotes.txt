@@ -1,0 +1,8 @@
+chip-tool log in DataModelLogger.cpp:
+    CHIP_ERROR DataModelLogger::LogAttribute(
+ReportCommand
+    OnAttributedata()
+
+
+socket tut:
+    https://github.com/project-chip/connectedhomeip/issues/29907
