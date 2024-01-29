@@ -22,6 +22,7 @@
 
 #include "DataModelLogger.h"
 #include "ModelCommand.h"
+#include <messaging/ExchangeMgr.h>
 
 class ReportCommand : public InteractionModelReports, public ModelCommand, public chip::app::ReadClient::Callback
 {
@@ -59,7 +60,7 @@ public:
         uint mEndpointId = path.mEndpointId;
         uint mClusterId = path.mClusterId;
         uint mAttributeId = path.mAttributeId;
-        printf("\n\n TOANLOG: \nmEndpointId = %d, mClusterId=%d, mAttributeId=%d \n\n",mEndpointId,mClusterId, mAttributeId );
+        printf("\n\n TOANLOG: \nmEndpointId = %d, mClusterId=%d, mAttributeId=%d febrix=%d\n\n",mEndpointId,mClusterId, mAttributeId, chip::Messaging::ExchangeManager::latestNodeId );
         chip::CharSpan value;
         chip::app::DataModel::Decode(*data, value);
         printf("\n\n DATA  %s data_length= %ld \n\n",std::string(value.data(), value.size()).c_str(), value.size());
@@ -97,8 +98,17 @@ public:
         // int c = 0; int d =0;
         // printf("%d",c/d);
 
+        char buf[512];
+        sprintf(buf,"{\"node\":%d,\"endpoint\":%d,\"cluster\":%d,\"attribute\":%d,\"mElemLenOrVal\":%ld,\"elementType\":%d}",
+        chip::Messaging::ExchangeManager::latestNodeId,
+        mEndpointId,
+        mClusterId,
+        mAttributeId,
+        data->mElemLenOrVal,
+        tLVElementType
+        );
         
-        InteractiveServerCommand::instance->mWebSocketServer.Send("toanstt test");
+        InteractiveServerCommand::instance->mWebSocketServer.Send(buf);
         printf("====================================================================\n");
     }
 

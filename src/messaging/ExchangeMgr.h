@@ -53,6 +53,8 @@ class DLL_EXPORT ExchangeManager : public SessionMessageDelegate
     friend class ExchangeContext;
 
 public:
+    //toanstt
+    static uint latestNodeId;
     ExchangeManager();
     ExchangeManager(const ExchangeManager &)           = delete;
     ExchangeManager operator=(const ExchangeManager &) = delete;
