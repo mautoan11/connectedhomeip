@@ -7,10 +7,15 @@ gen: zapgen main
 zap:
 	./scripts/tools/zap/run_zaptool.sh ./examples/all-clusters-app/all-clusters-common/all-clusters-app.zap
 all: zap gen
-chip-tool:
+chip-tool-server:
 	rm ../chip-tool/chip-tool
 	scripts/examples/gn_build_example.sh examples/chip-tool ../chip-tool/
 	../chip-tool/chip-tool interactive server --port 9003
+chip-tool-interactive:
+	rm ../chip-tool/chip-tool
+	scripts/examples/gn_build_example.sh examples/chip-tool ../chip-tool/
+	../chip-tool/chip-tool interactive start
+
 test: 
 	./scripts/tests/yaml/chiptool.py tests Test_Device_41
 	./scripts/tests/yaml/chiptool.py tests Test_Device_42
