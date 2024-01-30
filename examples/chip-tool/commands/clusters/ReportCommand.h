@@ -60,41 +60,41 @@ public:
         uint mEndpointId = path.mEndpointId;
         uint mClusterId = path.mClusterId;
         uint mAttributeId = path.mAttributeId;
-        printf("\n\n TOANLOG: \nmEndpointId = %d, mClusterId=%d, mAttributeId=%d febrix=%d\n\n",mEndpointId,mClusterId, mAttributeId, chip::Messaging::ExchangeManager::latestNodeId );
-        chip::CharSpan value;
-        chip::app::DataModel::Decode(*data, value);
-        printf("\n\n DATA  %s data_length= %ld \n\n",std::string(value.data(), value.size()).c_str(), value.size());
+        //printf("\n\n TOANLOG: \nmEndpointId = %d, mClusterId=%d, mAttributeId=%d febrix=%d\n\n",mEndpointId,mClusterId, mAttributeId, chip::Messaging::ExchangeManager::latestNodeId );
+        //chip::CharSpan value;
+        //chip::app::DataModel::Decode(*data, value);
+        //printf("\n\n DATA  %s data_length= %ld \n\n",std::string(value.data(), value.size()).c_str(), value.size());
 
         
         //onoff subscribe on-off 5 10 3333 1
 
 
-        chip::ByteSpan valuebyte;
-        data->Get(valuebyte);
-        printf("\n\n DATA  __ data_length= %ld \n\n", valuebyte.size());
+        // chip::ByteSpan valuebyte;
+        // data->Get(valuebyte);
+        // printf("\n\n DATA  __ data_length= %ld \n\n", valuebyte.size());
 
-        printf("\n\n data length= %d mElemLenOrVal = %ld \n\n", data->GetLength(), data->mElemLenOrVal);
+        //printf("\n\n data length= %d mElemLenOrVal = %ld \n\n", data->GetLength(), data->mElemLenOrVal);
 
-        bool valueb;
-        chip::app::DataModel::Decode(*data, valueb);
-        printf("\n\n DATA BOOL1  %s  \n\n",valueb==true?"TRUE":"FALSE");
+        // bool valueb;
+        // chip::app::DataModel::Decode(*data, valueb);
+        // printf("\n\n DATA BOOL1  %s  \n\n",valueb==true?"TRUE":"FALSE");
 
 
         
-        data->Get(valueb);
-        printf("\n\n DATA BOOL2  %s  \n\n",valueb==true?"TRUE":"FALSE");
+        // data->Get(valueb);
+        // printf("\n\n DATA BOOL2  %s  \n\n",valueb==true?"TRUE":"FALSE");
 
         int8_t tLVElementType = (int8_t)data->ElementType();
         printf("\n\n tLVElementType:  %d  \n\n",tLVElementType);
 
 
-        error = DataModelLogger::LogAttribute(path, data);
-        if (CHIP_NO_ERROR != error)
-        {
-            ChipLogError(chipTool, "Response Failure: Can not decode Data");
-            mError = error;
-            return;
-        }
+        // error = DataModelLogger::LogAttribute(path, data);
+        // if (CHIP_NO_ERROR != error)
+        // {
+        //     ChipLogError(chipTool, "Response Failure: Can not decode Data");
+        //     mError = error;
+        //     return;
+        // }
         // int c = 0; int d =0;
         // printf("%d",c/d);
 
@@ -107,7 +107,7 @@ public:
         data->mElemLenOrVal,
         tLVElementType
         );
-        
+        printf("SENDING: %s\n",buf);
         InteractiveServerCommand::instance->mWebSocketServer.Send(buf);
         printf("====================================================================\n");
     }
