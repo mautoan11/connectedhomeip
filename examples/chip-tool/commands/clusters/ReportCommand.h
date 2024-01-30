@@ -36,7 +36,7 @@ public:
                          const chip::app::StatusIB & status) override
     {
 
-        printf("====================================================================\n");
+        printf("\n====================================================================\n");
         CHIP_ERROR error = status.ToChipError();
         if (CHIP_NO_ERROR != error)
         {
@@ -85,7 +85,7 @@ public:
         // printf("\n\n DATA BOOL2  %s  \n\n",valueb==true?"TRUE":"FALSE");
 
         int8_t tLVElementType = (int8_t)data->ElementType();
-        printf("\n\n tLVElementType:  %d  \n\n",tLVElementType);
+        //printf("\n\n tLVElementType:  %d  \n\n",tLVElementType);
 
 
         // error = DataModelLogger::LogAttribute(path, data);
@@ -109,7 +109,7 @@ public:
         );
         printf("SENDING: %s\n",buf);
         InteractiveServerCommand::instance->mWebSocketServer.Send(buf);
-        printf("====================================================================\n");
+        printf("====================================================================\n\n");
     }
 
     void OnEventData(const chip::app::EventHeader & eventHeader, chip::TLV::TLVReader * data,
