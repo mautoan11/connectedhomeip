@@ -25,7 +25,7 @@
 #include <mutex>
 
 constexpr uint16_t kDefaultWebSocketServerPort = 9002;
-constexpr uint16_t kMaxMessageBufferLen        = 8192;
+constexpr uint16_t kMaxMessageBufferLen        = 16384;
 
 namespace {
 lws * gWebSocketInstance = nullptr;
