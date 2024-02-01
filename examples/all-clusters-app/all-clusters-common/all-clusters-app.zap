@@ -6921,7 +6921,7 @@
               "side": "server",
               "type": "boolean",
               "included": 1,
-              "storageOption": "NVM",
+              "storageOption": "RAM",
               "singleton": 0,
               "bounded": 0,
               "defaultValue": "0x00",

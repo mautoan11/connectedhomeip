@@ -438,6 +438,9 @@ void AllClustersAppCommandHandler::OnAirQualityChange(uint32_t aNewValue)
     {
         ChipLogDetail(NotSpecified, "Invalid value: %u", aNewValue);
     }
+
+    printf("\n\n\n\n OnAirQualityChange   \n\n\n\n\n");
+
 }
 
 void AllClustersCommandDelegate::OnEventCommandReceived(const char * json)

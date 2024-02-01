@@ -20,10 +20,45 @@
 #include "AppOptions.h"
 #include "binding-handler.h"
 
+using namespace chip;
 // Network commissioning
 namespace {
 constexpr chip::EndpointId kNetworkCommissioningEndpointSecondary = 0xFFFE;
 } // anonymous namespace
+
+
+void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
+{
+    printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d\r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
+    
+    return;
+}
+
+
+
+EmberAfStatus emberAfExternalAttributeReadCallback(EndpointId endpoint, ClusterId clusterId,
+                                                   EmberAfAttributeMetadata * attributeMetadata, uint16_t manufacturerCode,
+                                                   uint8_t * buffer, uint16_t maxReadLength, int32_t index)
+{
+    printf("\n\n\n\n\n &&&&&&&> emberAfExternalAttributeReadCallback endpoint=%d clusterId=%d data=%d\r\n\n\n",endpoint,clusterId,(int)buffer[0]);
+    return EMBER_ZCL_STATUS_SUCCESS;
+}
+EmberAfStatus emberAfExternalAttributeReadCallback(EndpointId endpoint, ClusterId clusterId,
+                                                   const EmberAfAttributeMetadata * attributeMetadata, uint8_t * buffer,
+                                                   uint16_t maxReadLength)
+{
+    printf("\n\n\n\n\n &&&&&&&2> emberAfExternalAttributeReadCallback endpoint=%d clusterId=%d data=%d\r\n\n\n",endpoint,clusterId,(int)buffer[0]);
+    return EMBER_ZCL_STATUS_SUCCESS;
+}
+
+EmberAfStatus emberAfExternalAttributeWriteCallback(EndpointId endpoint, ClusterId clusterId,
+                                                    const EmberAfAttributeMetadata * attributeMetadata, uint8_t * buffer)
+{
+   printf("\n\n\n\n\n 8888888> emberAfExternalAttributeWriteCallback endpoint=%d clusterId=%d data=%d\r\n\n\n",endpoint,clusterId,(int)buffer[0]);
+    return EMBER_ZCL_STATUS_SUCCESS;
+}
+
+
 
 int main(int argc, char * argv[])
 {
