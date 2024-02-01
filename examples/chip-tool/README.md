@@ -60,3 +60,11 @@ InteractiveServerCommand* InteractiveServerCommand::instance = nullptr;
   InteractiveServerCommand::instance->mWebSocketServer.Send(buf);
   printf("====================================================================\n\n");
 ```
+
+
+# Build
+1. Active the Matter environment
+2. Build
+```
+make chip-tool-server
+```
