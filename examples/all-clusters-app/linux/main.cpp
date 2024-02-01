@@ -31,6 +31,8 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
 {
     printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d\r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
     
+    //OnOff::Attributes::OnOff::
+    chip::Clusters::OnOff::setOnOffValue(0,OnOff::Commands::On::Id,false);
     return;
 }
 
