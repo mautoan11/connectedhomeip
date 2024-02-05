@@ -19,22 +19,25 @@
 #include "AppMain.h"
 #include "AppOptions.h"
 #include "binding-handler.h"
+//#include <app/clusters/on-off-server/on-off-server.h>
+//#include <app/clusters/switch-server/switch-server.h>
 
 using namespace chip;
+using namespace chip::app::Clusters;
 // Network commissioning
 namespace {
 constexpr chip::EndpointId kNetworkCommissioningEndpointSecondary = 0xFFFE;
 } // anonymous namespace
 
 
-void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
-{
-    printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d\r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
+// void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
+// {
+//     printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d\r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
     
-    //OnOff::Attributes::OnOff::
-    chip::Clusters::OnOff::setOnOffValue(0,OnOff::Commands::On::Id,false);
-    return;
-}
+//     //OnOff::Attributes::OnOff::
+//     //OnOffServer::Instance().setOnOffValue(0,chip::app::Clusters::OnOff::Commands::On::Id,false);
+//     return;
+// }
 
 
 

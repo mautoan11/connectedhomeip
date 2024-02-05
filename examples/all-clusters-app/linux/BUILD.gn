@@ -48,6 +48,7 @@ source_set("chip-all-clusters-common") {
     "include/tv-callbacks.cpp",
     "include/tv-callbacks.h",
     "main-common.cpp",
+    "WebsocketManager.cpp",
   ]
 
   deps = [
@@ -56,11 +57,13 @@ source_set("chip-all-clusters-common") {
     "${chip_root}/src/app/tests/suites/credentials:dac_provider",
     "${chip_root}/src/lib",
     "${chip_root}/third_party/jsoncpp",
+    "${chip_root}/examples/common/websocket-server",
   ]
 
   include_dirs = [
     "${chip_root}/examples/all-clusters-app/all-clusters-common/include",
     "${chip_root}/examples/energy-management-app/energy-management-common/include",
+    "${chip_root}/examples/common",
   ]
 
   cflags = [ "-Wconversion" ]

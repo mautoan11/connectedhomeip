@@ -20,6 +20,8 @@
 
 #include <app/server/CommissioningWindowManager.h>
 #include <app/server/Server.h>
+#include <app/clusters/switch-server/switch-server.h>
+#include <app/clusters/on-off-server/on-off-server.h>
 
 using namespace chip::ArgParser;
 

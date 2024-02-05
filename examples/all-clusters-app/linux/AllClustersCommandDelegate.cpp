@@ -31,6 +31,7 @@
 #include <dishwasher-mode.h>
 #include <laundry-washer-mode.h>
 #include <rvc-modes.h>
+#include <app/clusters/on-off-server/on-off-server.h>
 
 using namespace chip;
 using namespace chip::app;
@@ -453,4 +454,16 @@ void AllClustersCommandDelegate::OnEventCommandReceived(const char * json)
     }
 
     chip::DeviceLayer::PlatformMgr().ScheduleWork(AllClustersAppCommandHandler::HandleCommand, reinterpret_cast<intptr_t>(handler));
+}
+void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
+{
+    bool currentLedState;
+    OnOffServer::Instance().getOnOffValue(1, &currentLedState);
+    printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d VVVVV=%s\r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0],currentLedState==true?"TRUE":"FALSE");
+    
+    //OnOff::Attributes::OnOff::
+    //OnOffServer::Instance().setOnOffValue(1,chip::app::Clusters::OnOff::Commands::On::Id,false);
+    
+
+    return;
 }
