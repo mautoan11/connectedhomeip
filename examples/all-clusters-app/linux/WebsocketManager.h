@@ -2,14 +2,19 @@
 #ifndef WEBSOCKETMANAGER_H
 #define WEBSOCKETMANAGER_H
 
-#include <websocket-server/WebSocketServer.h>
+
+
+//#include <websocket-server/WebSocketServer.h>
+//#include <WebSocketServer.h>
+//#include <./examples/common/websocket-server/WebSocketServer.h>
+
+//#include <app/tests/suites/credentials/TestHarnessDACProvider.h>
 
 class WebsocketManager: public WebSocketServerDelegate
 {
-    //chip::Optional<uint16_t> mPort;
-    WebSocketServer mWebSocketServer;
-    public:
-    WebsocketManager();
+    // WebSocketServer mWebSocketServer;
+    // public:
+     WebsocketManager();
     bool OnWebSocketMessageReceived(char * msg) override;
 };
 

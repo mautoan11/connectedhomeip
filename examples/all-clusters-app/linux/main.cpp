@@ -19,9 +19,7 @@
 #include "AppMain.h"
 #include "AppOptions.h"
 #include "binding-handler.h"
-//#include <app/clusters/on-off-server/on-off-server.h>
-//#include <app/clusters/switch-server/switch-server.h>
-
+#include "WebsocketManager.h"
 using namespace chip;
 using namespace chip::app::Clusters;
 // Network commissioning
@@ -72,6 +70,8 @@ int main(int argc, char * argv[])
     VerifyOrDie(InitBindingHandlers() == CHIP_NO_ERROR);
 
     LinuxDeviceOptions::GetInstance().dacProvider = AppOptions::GetDACProvider();
+
+
 
     ChipLinuxAppMainLoop();
 

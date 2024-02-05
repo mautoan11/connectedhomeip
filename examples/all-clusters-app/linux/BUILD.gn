@@ -64,6 +64,7 @@ source_set("chip-all-clusters-common") {
     "${chip_root}/examples/all-clusters-app/all-clusters-common/include",
     "${chip_root}/examples/energy-management-app/energy-management-common/include",
     "${chip_root}/examples/common",
+    "${chip_root}/examples/common/websocket-server",
   ]
 
   cflags = [ "-Wconversion" ]
@@ -82,7 +83,10 @@ source_set("chip-lock-app-common") {
     "${chip_root}/examples/lock-app/lock-common/src/ZCLDoorLockCallbacks.cpp",
   ]
 
-  deps = [ "${chip_root}/examples/all-clusters-app/all-clusters-common" ]
+  deps = [ 
+    "${chip_root}/examples/all-clusters-app/all-clusters-common",
+    "${chip_root}/examples/common/websocket-server",
+  ]
 
   include_dirs = [ "${chip_root}/examples/lock-app/lock-common/include" ]
 
@@ -96,6 +100,7 @@ if (is_libfuzzer) {
     deps = [
       ":chip-all-clusters-common",
       "${chip_root}/examples/platform/linux:app-main",
+      "${chip_root}/examples/common/websocket-server",
     ]
 
     cflags = [ "-Wconversion" ]
