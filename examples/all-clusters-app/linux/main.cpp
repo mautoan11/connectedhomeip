@@ -19,7 +19,7 @@
 #include "AppMain.h"
 #include "AppOptions.h"
 #include "binding-handler.h"
-#include "WebsocketManager.h"
+//#include "WebsocketManager.h"
 using namespace chip;
 using namespace chip::app::Clusters;
 // Network commissioning

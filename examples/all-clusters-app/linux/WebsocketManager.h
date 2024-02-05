@@ -4,7 +4,7 @@
 
 
 
-//#include <websocket-server/WebSocketServer.h>
+#include <websocket-server/WebSocketServer.h>
 //#include <WebSocketServer.h>
 //#include <./examples/common/websocket-server/WebSocketServer.h>
 
@@ -12,9 +12,7 @@
 
 class WebsocketManager: public WebSocketServerDelegate
 {
-    // WebSocketServer mWebSocketServer;
-    // public:
-     WebsocketManager();
+    WebsocketManager();
     bool OnWebSocketMessageReceived(char * msg) override;
 };
 
