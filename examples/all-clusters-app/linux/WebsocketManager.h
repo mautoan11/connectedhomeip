@@ -12,8 +12,14 @@
 
 class WebsocketManager: public WebSocketServerDelegate
 {
+    
+    public:
+    WebSocketServer mWebSocketServer;
+    static WebsocketManager* instance;
+    
     WebsocketManager();
     bool OnWebSocketMessageReceived(char * msg) override;
+    void Start();
 };
 
 

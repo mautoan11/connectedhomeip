@@ -73,7 +73,8 @@ int main(int argc, char * argv[])
 
     LinuxDeviceOptions::GetInstance().dacProvider = AppOptions::GetDACProvider();
 
-
+    WebsocketManager * websocketManager = new WebsocketManager();
+    websocketManager->Start();
     
 
 
