@@ -5,21 +5,27 @@
 
 
 #include <websocket-server/WebSocketServer.h>
-//#include <WebSocketServer.h>
-//#include <./examples/common/websocket-server/WebSocketServer.h>
-
-//#include <app/tests/suites/credentials/TestHarnessDACProvider.h>
+#include <string>
+#include <set>
 
 class WebsocketManager: public WebSocketServerDelegate
 {
-    
+
+    private:
+        //char buf[1024];
     public:
+    std::set<std::string> clusterInits;
+
+    bool isWebsocketConnected;
     WebSocketServer mWebSocketServer;
     static WebsocketManager* instance;
     
     WebsocketManager();
     bool OnWebSocketMessageReceived(char * msg) override;
     void Start();
+    void Send(const char * msg);
+    void SendClusterInit(std::string clusterId, int endpointId);
+
 };
 
 
