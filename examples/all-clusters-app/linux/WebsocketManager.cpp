@@ -25,15 +25,11 @@ void WebsocketManager::SendClusterInit(string clusterId, int endpointId)
 {
     
     sprintf(buf,"{\"clusterName\":\"%s\",\"endpointId\": %d}", clusterId.c_str(), endpointId);
+    this->clusterInits.insert(string(buf));
     if(this->isWebsocketConnected)
     {
         Send(buf);
     }
-    else
-    {
-        this->clusterInits.insert(string(buf));
-    }
-    
 }
 void * MySocketThread(void * context)
 {
