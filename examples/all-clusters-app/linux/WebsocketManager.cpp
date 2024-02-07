@@ -6,6 +6,8 @@
 #include <websocket-server/WebSocketServer.h>
 #include <string>
 #include <sstream>
+#include <json/value.h>
+#include <json/reader.h>
 using namespace std;
 char buf[1024];
 WebsocketManager::WebsocketManager()
@@ -51,7 +53,7 @@ void WebsocketManager::Start()
 bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
 {
     isWebsocketConnected= true;
-    printf("\n\nCCCCCCCCCCCCCCC \n OnWebSocketMessageReceived \n\n");
+    printf("OnWebSocketMessageReceived: %s \n\n",msg);
 
     if(strcmp(msg,"new") == 0)
     {
@@ -64,12 +66,39 @@ bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
     }
     else
     {
-        
+        Json::Value root;
+        Json::Reader reader;
+        bool parsingSuccessful = reader.parse( msg, root );
+        if ( !parsingSuccessful )printf("Error parsing the string");
+        else
+        {
+            if(strcmp(root["action"].asString().c_str(),"get")==0)
+            {
+                //printf("\nget\n");
+                int endpointId = root["endpointId"].asInt();
+                int clusterId = root["clusterId"].asInt();
+                this->GetClusterValue(endpointId,clusterId);
+            } else printf("\nERROR\n");
+
+        }
     }
 
     return true;
 }
-
+void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
+{
+    chip::EndpointId endpointid = (chip::EndpointId)endpointId;
+    ///printf("ZZZZZZZZZZZZZZ %d %d\n",endpointId,clusterId);
+    switch(clusterId)
+    {
+        case 6:
+            bool currentLedState;
+                printf("\n\n ZZZZZZZZZZZZ: Trying to get data endpointid=%d clusterId=%d\n\n\n",endpointId,clusterId );
+                OnOffServer::Instance().getOnOffValue(endpointid, &currentLedState);
+                printf("GGGGGGGGGget: %s\n", currentLedState?"TRUE":"FALSE");
+            break;
+    }
+}
 
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
 {

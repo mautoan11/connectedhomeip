@@ -128,7 +128,9 @@ if (is_libfuzzer) {
   if (chip_device_platform == "darwin") {
     action("codesign") {
       script = "entitlements/codesign.py"
-      public_deps = [ ":chip-all-clusters-app" ]
+      public_deps = [ ":chip-all-clusters-app",
+        "${chip_root}/third_party/jsoncpp", 
+        ]
 
       args = [
         "--target_path",

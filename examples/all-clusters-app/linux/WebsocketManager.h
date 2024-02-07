@@ -25,6 +25,7 @@ class WebsocketManager: public WebSocketServerDelegate
     void Start();
     void Send(const char * msg);
     void SendClusterInit(int clusterId, int endpointId);
+    void GetClusterValue(int endpointId,int clusterId);
 
 };
 
