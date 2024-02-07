@@ -21,10 +21,10 @@ void WebsocketManager::Send(const char * msg)
         this->mWebSocketServer.Send(msg);
     
 }
-void WebsocketManager::SendClusterInit(string clusterId, int endpointId)
+void WebsocketManager::SendClusterInit(int clusterId, int endpointId)
 {
     
-    sprintf(buf,"{\"clusterName\":\"%s\",\"endpointId\": %d}", clusterId.c_str(), endpointId);
+    sprintf(buf,"{\"clusterId\":%d,\"endpointId\": %d}", clusterId, endpointId);
     this->clusterInits.insert(string(buf));
     if(this->isWebsocketConnected)
     {
@@ -118,7 +118,7 @@ void emberAfAirQualityClusterInitCallback(chip::EndpointId endpointId)
 void emberAfOnOffClusterInitCallback(chip::EndpointId endpointId)
 {
     printf("\n\n\n\n\n\n DDDDDDDDDDDDDD WWWWWWWWWWWWWW \n\n\n");
-    WebsocketManager::instance->SendClusterInit("OnOff",endpointId );
+    WebsocketManager::instance->SendClusterInit(6,endpointId );
     
 }
 #endif

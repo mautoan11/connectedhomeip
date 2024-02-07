@@ -24,7 +24,7 @@ class WebsocketManager: public WebSocketServerDelegate
     bool OnWebSocketMessageReceived(char * msg) override;
     void Start();
     void Send(const char * msg);
-    void SendClusterInit(std::string clusterId, int endpointId);
+    void SendClusterInit(int clusterId, int endpointId);
 
 };
 
