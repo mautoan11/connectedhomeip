@@ -62,6 +62,10 @@ bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
             Send((*itr).c_str());
         }
     }
+    else
+    {
+        
+    }
 
     return true;
 }
