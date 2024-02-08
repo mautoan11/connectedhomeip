@@ -8,8 +8,12 @@
 #include <sstream>
 #include <json/value.h>
 #include <json/reader.h>
+#include <platform/CHIPDeviceLayer.h>
 using namespace std;
+using namespace chip;
+using namespace chip::app::Clusters;
 char buf[1024];
+//char buf_dataraw[128];
 WebsocketManager::WebsocketManager()
 {
     WebsocketManager::instance = this;
@@ -85,19 +89,38 @@ bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
 
     return true;
 }
+
 void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
 {
     chip::EndpointId endpointid = (chip::EndpointId)endpointId;
+    int attributeId =0;
+    int size=1;
+    string raw ="";
+    string data_int_str = "0";
     ///printf("ZZZZZZZZZZZZZZ %d %d\n",endpointId,clusterId);
     switch(clusterId)
     {
         case 6:
             bool currentLedState;
-                printf("\n\n ZZZZZZZZZZZZ: Trying to get data endpointid=%d clusterId=%d\n\n\n",endpointId,clusterId );
+                //printf("\n\n ZZZZZZZZZZZZ: Trying to get data endpointid=%d clusterId=%d\n\n\n",endpointId,clusterId );
+                chip::DeviceLayer::PlatformMgr().LockChipStack();
                 OnOffServer::Instance().getOnOffValue(endpointid, &currentLedState);
-                printf("GGGGGGGGGget: %s\n", currentLedState?"TRUE":"FALSE");
+                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                attributeId =0;
+
+                //printf("GGGGGGGGGget: %s\n", currentLedState?"TRUE":"FALSE");
+                data_int_str = currentLedState?"1":"0";
             break;
     }
+    sprintf(buf,"{\"endpointId\":%d,\"clusterId\":%d,\"attributeId\":%d,\"data_int\":%s,\"size\":%d,\"data_raw\":\"%s\" }",
+    endpointId,
+    clusterId,
+    attributeId,
+    data_int_str.c_str(),
+    size,
+    raw.c_str() );
+    WebsocketManager::instance->Send(buf);
+
 }
 
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
