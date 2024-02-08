@@ -1,7 +1,8 @@
 #pragma once
 #ifndef WEBSOCKETMANAGER_H
 #define WEBSOCKETMANAGER_H
-
+#include <json/value.h>
+#include <json/reader.h>
 
 
 #include <websocket-server/WebSocketServer.h>
@@ -26,6 +27,7 @@ class WebsocketManager: public WebSocketServerDelegate
     void Send(const char * msg);
     void SendClusterInit(int clusterId, int endpointId);
     void GetClusterValue(int endpointId,int clusterId);
+    void SetClusterValue(int endpointId,int clusterId, int attributeId,Json::Value value );
 
 };
 

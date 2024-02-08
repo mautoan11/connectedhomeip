@@ -82,14 +82,38 @@ bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
                 int endpointId = root["endpointId"].asInt();
                 int clusterId = root["clusterId"].asInt();
                 this->GetClusterValue(endpointId,clusterId);
-            } else printf("\nERROR\n");
+            } else if(strcmp(root["action"].asString().c_str(),"set")==0)
+            {
+                int endpointId = root["endpointId"].asInt();
+                int clusterId = root["clusterId"].asInt();
+                int attributeId = root["attributeId"].asInt();
+                this->SetClusterValue(endpointId,clusterId,attributeId,root["value"] );
+
+            }
+            else printf("\nERROR\n");
 
         }
     }
 
     return true;
 }
-
+void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attributeId,Json::Value value )
+{
+    switch(clusterId)
+    {
+        case 6:
+            if (attributeId==0) 
+            {
+                printf("aa\n");
+                bool valueInt = value.asBool();
+                printf("bb\n");
+                chip::DeviceLayer::PlatformMgr().LockChipStack();
+                OnOffServer::Instance().setOnOffValue((EndpointId)endpointId,valueInt==true?chip::app::Clusters::OnOff::Commands::On::Id:chip::app::Clusters::OnOff::Commands::Off::Id,false);
+                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            }
+        break;
+    }
+}
 void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
 {
     chip::EndpointId endpointid = (chip::EndpointId)endpointId;
@@ -127,7 +151,7 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
 {
     //bool currentLedState;
     //OnOffServer::Instance().getOnOffValue(1, &currentLedState);
-    printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d \r\n\n\n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
+    printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d \n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
     
     //OnOff::Attributes::OnOff::
     //OnOffServer::Instance().setOnOffValue(1,chip::app::Clusters::OnOff::Commands::On::Id,false);
@@ -142,6 +166,7 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
             sstream << " ";
     }
     sprintf(buf,"{\"endpointId\":%d,\"clusterId\":%d,\"attributeId\":%d,\"data_int\":%d,\"size\":%d,\"data_raw\":\"%s\" }",path.mEndpointId,path.mClusterId,path.mAttributeId,(int)value[0],size,sstream.str().c_str() );
+    printf("Sending: %s \n",buf);
     WebsocketManager::instance->Send(buf);
 
 }
