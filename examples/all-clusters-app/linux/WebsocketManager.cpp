@@ -3,6 +3,7 @@
 #include "WebsocketManager.h"
 #include <app/clusters/switch-server/switch-server.h>
 #include <app/clusters/on-off-server/on-off-server.h>
+#include <app/clusters/level-control/level-control.h>
 #include <websocket-server/WebSocketServer.h>
 #include <string>
 #include <sstream>
@@ -14,6 +15,7 @@ using namespace chip;
 using namespace chip::app::Clusters;
 char buf[1024];
 //char buf_dataraw[128];
+WebsocketManager* WebsocketManager::instance = nullptr;
 WebsocketManager::WebsocketManager()
 {
     WebsocketManager::instance = this;
@@ -112,6 +114,27 @@ void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attribu
                 chip::DeviceLayer::PlatformMgr().UnlockChipStack();
             }
         break;
+        case 8:
+            if (attributeId==0) 
+            {
+                uint valueInt = value.asUInt();
+                chip::DeviceLayer::PlatformMgr().LockChipStack();
+                LevelControl::Commands::MoveToLevel::DecodableType data;
+
+                data.level = (unsigned char)valueInt;
+                data.optionsMask.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
+                data.optionsOverride.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
+
+        //(void) LevelControlServer::MoveToLevel(mEndpointId, data);
+
+                LevelControlServer::MoveToLevel((EndpointId)endpointId, data);
+                //OnOffServer::Instance().setOnOffValue((EndpointId)endpointId,valueInt==true?chip::app::Clusters::OnOff::Commands::On::Id:chip::app::Clusters::OnOff::Commands::Off::Id,false);
+                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            }
+        break;
+        default:
+            printf("\n[NOT IMPLEMENTED ERROR] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);
+        break;
     }
 }
 void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
@@ -149,16 +172,8 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
 
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)
 {
-    //bool currentLedState;
-    //OnOffServer::Instance().getOnOffValue(1, &currentLedState);
     printf("\n\n\n\n\n ====> MatterPostAttributeChangeCallback endpoint=%d clusterId=%d attribute=%d data=%d \n",path.mEndpointId ,path.mClusterId,path.mAttributeId, (int)value[0]);
-    
-    //OnOff::Attributes::OnOff::
-    //OnOffServer::Instance().setOnOffValue(1,chip::app::Clusters::OnOff::Commands::On::Id,false);
-
     std::ostringstream sstream;
-    
-    
     for(int i=0; i < size; i++)
     {
         sstream << (int)value[i];
@@ -174,27 +189,12 @@ void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & 
 
 
 
-WebsocketManager* WebsocketManager::instance = nullptr;
+
 
 
 void emberAfAirQualityClusterInitCallback(chip::EndpointId endpointId)
 {
     printf("\n\n\n\n\n\n CCCCCCCCCCCCCCCCCCCCCCCCCC CCCCCCCCCCCCCCCCCCCC \n\n\n");
-    // //VerifyOrDie(endpointId == 1); // this cluster is only enabled for endpoint 1.
-    // if(gAirQualityCluster == nullptr)
-    // {
-    //     chip::BitMask<Feature, uint32_t> airQualityFeatures(Feature::kModerate, Feature::kFair, Feature::kVeryPoor,
-    //                                                     Feature::kExtremelyPoor);
-    //     gAirQualityCluster = new Instance(endpointId, airQualityFeatures);
-    //     gAirQualityCluster->Init();
-    // }
-    // else
-    // {
-    //     chip::BitMask<Feature, uint32_t> airQualityFeatures2(Feature::kModerate, Feature::kFair, Feature::kVeryPoor,
-    //                                                     Feature::kExtremelyPoor);
-    //     Instance* gAirQualityCluster2 = new Instance(endpointId, airQualityFeatures2);
-    //     gAirQualityCluster2->Init();
-    // }
 }
 void emberAfOnOffClusterInitCallback(chip::EndpointId endpointId)
 {
@@ -202,4 +202,11 @@ void emberAfOnOffClusterInitCallback(chip::EndpointId endpointId)
     WebsocketManager::instance->SendClusterInit(6,endpointId );
     
 }
+void emberAfLevelControlClusterInitCallback(chip::EndpointId endpointId)
+{
+    printf("\n\n\n\n\n\n DDDDDDDDDDDDDD emberAfLevelControlClusterInitCallback WWWWWWWWWWWWWW \n\n\n");
+    WebsocketManager::instance->SendClusterInit(8,endpointId );
+    
+}
+
 #endif
