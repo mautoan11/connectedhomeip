@@ -120,16 +120,26 @@ void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attribu
                 uint valueInt = value.asUInt();
                 chip::DeviceLayer::PlatformMgr().LockChipStack();
                 LevelControl::Commands::MoveToLevel::DecodableType data;
-
                 data.level = (unsigned char)valueInt;
                 data.optionsMask.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
                 data.optionsOverride.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
-
-        //(void) LevelControlServer::MoveToLevel(mEndpointId, data);
-
                 LevelControlServer::MoveToLevel((EndpointId)endpointId, data);
-                //OnOffServer::Instance().setOnOffValue((EndpointId)endpointId,valueInt==true?chip::app::Clusters::OnOff::Commands::On::Id:chip::app::Clusters::OnOff::Commands::Off::Id,false);
                 chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            }
+        break;
+        case 1026:
+            if (attributeId==0) 
+            {
+                uint valueInt = value.asUInt();
+                
+                chip::DeviceLayer::PlatformMgr().LockChipStack();
+                chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+        // chip::app::Clusters::RelativeHumidityMeasurement::Attributes::MeasuredValue::Set(
+        //     /* endpoint ID */ 1, /* humidity in 0.01% */ int16_t(humidity));
+
+        // chip::app::Clusters::PressureMeasurement::Attributes::MeasuredValue::Set(
+        //     /* endpoint ID */ 1, /* pressure in 0.01 */ int16_t(pressure));
             }
         break;
         default:
@@ -200,13 +210,17 @@ void emberAfOnOffClusterInitCallback(chip::EndpointId endpointId)
 {
     printf("\n\n\n\n\n\n DDDDDDDDDDDDDD WWWWWWWWWWWWWW \n\n\n");
     WebsocketManager::instance->SendClusterInit(6,endpointId );
-    
 }
 void emberAfLevelControlClusterInitCallback(chip::EndpointId endpointId)
 {
     printf("\n\n\n\n\n\n DDDDDDDDDDDDDD emberAfLevelControlClusterInitCallback WWWWWWWWWWWWWW \n\n\n");
     WebsocketManager::instance->SendClusterInit(8,endpointId );
-    
 }
+void emberAfTemperatureMeasurementClusterInitCallback(chip::EndpointId endpointId)
+{
+    printf("\n\n\n\n\n\n DDDDDDDDDDDDDD emberAfLevelControlClusterInitCallback WWWWWWWWWWWWWW \n\n\n");
+    WebsocketManager::instance->SendClusterInit(0x0402,endpointId );
+}
+
 
 #endif
