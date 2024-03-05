@@ -10,6 +10,9 @@
 #include <json/value.h>
 #include <json/reader.h>
 #include <platform/CHIPDeviceLayer.h>
+#include <app-common/zap-generated/attributes/Accessors.h>
+#include <app-common/zap-generated/ids/Clusters.h>
+
 using namespace std;
 using namespace chip;
 using namespace chip::app::Clusters;
@@ -101,46 +104,67 @@ bool WebsocketManager::OnWebSocketMessageReceived(char * msg)
 }
 void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attributeId,Json::Value value )
 {
+    bool valueBool;
+    uint valueInt;
+    LevelControl::Commands::MoveToLevel::DecodableType data;
     switch(clusterId)
     {
         case 6:
-            if (attributeId==0) 
+            switch (attributeId)
             {
-                printf("aa\n");
-                bool valueInt = value.asBool();
-                printf("bb\n");
-                chip::DeviceLayer::PlatformMgr().LockChipStack();
-                OnOffServer::Instance().setOnOffValue((EndpointId)endpointId,valueInt==true?chip::app::Clusters::OnOff::Commands::On::Id:chip::app::Clusters::OnOff::Commands::Off::Id,false);
-                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                case 0:
+                    printf("aa\n");
+                    valueBool = value.asBool();
+                    printf("bb\n");
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    OnOffServer::Instance().setOnOffValue((EndpointId)endpointId,valueBool==true?chip::app::Clusters::OnOff::Commands::On::Id:chip::app::Clusters::OnOff::Commands::Off::Id,false);
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                default: printf("\n[NOT IMPLEMENTED ERROR 2] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);break;
             }
+            
         break;
         case 8:
-            if (attributeId==0) 
+            
+            switch (attributeId)
             {
-                uint valueInt = value.asUInt();
-                chip::DeviceLayer::PlatformMgr().LockChipStack();
-                LevelControl::Commands::MoveToLevel::DecodableType data;
-                data.level = (unsigned char)valueInt;
-                data.optionsMask.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
-                data.optionsOverride.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
-                LevelControlServer::MoveToLevel((EndpointId)endpointId, data);
-                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            case 0:
+                    valueInt = value.asUInt();
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    data.level = (unsigned char)valueInt;
+                    data.optionsMask.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
+                    data.optionsOverride.Set(LevelControl::OptionsBitmap::kExecuteIfOff);
+                    LevelControlServer::MoveToLevel((EndpointId)endpointId, data);
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            break;
+            default: printf("\n[NOT IMPLEMENTED ERROR 2] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);break;
             }
         break;
         case 1026:
-            if (attributeId==0) 
-            {
-                uint valueInt = value.asUInt();
-                
-                chip::DeviceLayer::PlatformMgr().LockChipStack();
-                chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
-                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-        // chip::app::Clusters::RelativeHumidityMeasurement::Attributes::MeasuredValue::Set(
-        //     /* endpoint ID */ 1, /* humidity in 0.01% */ int16_t(humidity));
+            switch (attributeId)
+                {
+                case 0:
+                    valueInt = value.asUInt();
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                case 1:
+                    valueInt = value.asUInt();
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    chip::app::Clusters::TemperatureMeasurement::Attributes::MinMeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                case 2:
+                    valueInt = value.asUInt();
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    chip::app::Clusters::TemperatureMeasurement::Attributes::MaxMeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                default: printf("\n[NOT IMPLEMENTED ERROR 2] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);break;
+                }
 
-        // chip::app::Clusters::PressureMeasurement::Attributes::MeasuredValue::Set(
-        //     /* endpoint ID */ 1, /* pressure in 0.01 */ int16_t(pressure));
-            }
+           
         break;
         default:
             printf("\n[NOT IMPLEMENTED ERROR] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);
@@ -159,25 +183,49 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
     {
         case 6:
             bool currentLedState;
-                //printf("\n\n ZZZZZZZZZZZZ: Trying to get data endpointid=%d clusterId=%d\n\n\n",endpointId,clusterId );
-                chip::DeviceLayer::PlatformMgr().LockChipStack();
-                OnOffServer::Instance().getOnOffValue(endpointid, &currentLedState);
-                chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-                attributeId =0;
+            chip::DeviceLayer::PlatformMgr().LockChipStack();
+            OnOffServer::Instance().getOnOffValue(endpointid, &currentLedState);
+            chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            attributeId =0;
+            data_int_str = currentLedState?"1":"0";
+            this->SendAttributeValue(endpointId,clusterId,attributeId, data_int_str,size, raw );
+        break;
+        case 1026: //temperator
+            chip::DeviceLayer::PlatformMgr().LockChipStack();
+            int measuredValue = chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,NULL);
+            chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            this->SendAttributeValue(endpointId,clusterId,0, measuredValue,0, 0 );
+        break;
+        default:
+            printf("\n[NOT IMPLEMENTED ERROR (GET)] NOT SUPPORT clusterId=%d endpointId=%d\n\n", clusterId,endpointId);
+            return;
+        break;
 
-                //printf("GGGGGGGGGget: %s\n", currentLedState?"TRUE":"FALSE");
-                data_int_str = currentLedState?"1":"0";
-            break;
+
     }
-    sprintf(buf,"{\"endpointId\":%d,\"clusterId\":%d,\"attributeId\":%d,\"data_int\":%s,\"size\":%d,\"data_raw\":\"%s\" }",
+}
+
+void WebsocketManager::SendAttributeValue(int endpointId,int clusterId,int attributeId, int data_int, int size, std::string data_raw)
+{
+    sprintf(buf,"{\"endpointId\":%d,\"clusterId\":%d,\"attributeId\":%d,\"data_int\":%d,\"size\":%d,\"data_raw\":\"%s\" }",
     endpointId,
     clusterId,
     attributeId,
-    data_int_str.c_str(),
+    data_int,
     size,
-    raw.c_str() );
+    data_raw.c_str() );
     WebsocketManager::instance->Send(buf);
-
+}
+void WebsocketManager::SendAttributeValue(int endpointId,int clusterId,int attributeId, std::string data_int, int size, std::string data_raw)
+{
+sprintf(buf,"{\"endpointId\":%d,\"clusterId\":%d,\"attributeId\":%d,\"data_int\":%s,\"size\":%d,\"data_raw\":\"%s\" }",
+    endpointId,
+    clusterId,
+    attributeId,
+    data_int.c_str(),
+    size,
+    data_raw.c_str() );
+    WebsocketManager::instance->Send(buf);
 }
 
 void MatterPostAttributeChangeCallback(const chip::app::ConcreteAttributePath & path, uint8_t type, uint16_t size, uint8_t * value)

@@ -26,8 +26,11 @@ class WebsocketManager: public WebSocketServerDelegate
     void Start();
     void Send(const char * msg);
     void SendClusterInit(int clusterId, int endpointId);
+    void SendAttributeValue(int endpointId,int clusterId,int attributeId, int data_int, int size, std::string data_raw);
+    void SendAttributeValue(int endpointId,int clusterId,int attributeId, std::string data_int, int size, std::string data_raw);
     void GetClusterValue(int endpointId,int clusterId);
     void SetClusterValue(int endpointId,int clusterId, int attributeId,Json::Value value );
+    
 
 };
 
