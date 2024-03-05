@@ -191,8 +191,9 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
             this->SendAttributeValue(endpointId,clusterId,attributeId, data_int_str,size, raw );
         break;
         case 1026: //temperator
+            chip::app::DataModel::Nullable<int16_t> measuredValue;
             chip::DeviceLayer::PlatformMgr().LockChipStack();
-            int measuredValue = chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,NULL);
+            chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
             chip::DeviceLayer::PlatformMgr().UnlockChipStack();
             this->SendAttributeValue(endpointId,clusterId,0, measuredValue,0, 0 );
         break;
