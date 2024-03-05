@@ -178,6 +178,7 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
     int size=1;
     string raw ="";
     string data_int_str = "0";
+    chip::app::DataModel::Nullable<int16_t> measuredValue;
     ///printf("ZZZZZZZZZZZZZZ %d %d\n",endpointId,clusterId);
     switch(clusterId)
     {
@@ -190,13 +191,30 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
             data_int_str = currentLedState?"1":"0";
             this->SendAttributeValue(endpointId,clusterId,attributeId, data_int_str,size, raw );
         break;
-        case 1026: //temperator
-            chip::app::DataModel::Nullable<int16_t> measuredValue;
-            chip::DeviceLayer::PlatformMgr().LockChipStack();
-            chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
-            chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-            this->SendAttributeValue(endpointId,clusterId,0, measuredValue,0, 0 );
-        break;
+        //case 8:
+            // chip::DeviceLayer::PlatformMgr().LockChipStack();
+            // LevelControlServer::Instance().getl getOnOffValue(endpointid, &currentLedState);
+            // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+        //break;
+        //case 1026: //temperator
+            //chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+            // chip::DeviceLayer::PlatformMgr().LockChipStack();
+            // chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
+            // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            // this->SendAttributeValue(endpointId,clusterId,0, measuredValue.Value(),0, 0 );
+
+            // chip::DeviceLayer::PlatformMgr().LockChipStack();
+            // chip::app::Clusters::TemperatureMeasurement::Attributes::MinMeasuredValue::Get((EndpointId)endpointId,measuredValue);
+            // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            // this->SendAttributeValue(endpointId,clusterId,1, measuredValue.Value(),0, 0 );
+
+            // chip::DeviceLayer::PlatformMgr().LockChipStack();
+            // chip::app::Clusters::TemperatureMeasurement::Attributes::MaxMeasuredValue::Get((EndpointId)endpointId,measuredValue);
+            // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            // this->SendAttributeValue(endpointId,clusterId,2, measuredValue.Value(),0, 0 );
+
+
+        //break;
         default:
             printf("\n[NOT IMPLEMENTED ERROR (GET)] NOT SUPPORT clusterId=%d endpointId=%d\n\n", clusterId,endpointId);
             return;
