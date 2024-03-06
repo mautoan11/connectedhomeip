@@ -196,12 +196,14 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
             // LevelControlServer::Instance().getl getOnOffValue(endpointid, &currentLedState);
             // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
         //break;
-        //case 1026: //temperator
-            //chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
-            // chip::DeviceLayer::PlatformMgr().LockChipStack();
-            // chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
-            // chip::DeviceLayer::PlatformMgr().UnlockChipStack();
-            // this->SendAttributeValue(endpointId,clusterId,0, measuredValue.Value(),0, 0 );
+        case 1026: //temperator
+            //////chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
+            chip::DeviceLayer::PlatformMgr().LockChipStack();
+            //chip::app::Clusters::TemperatureMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
+            //chip::app::Clusters::RelativeHumidityMeasurement::Attributes::MeasuredValue::Get((EndpointId)endpointId,measuredValue);
+            
+            chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+            //this->SendAttributeValue(endpointId,clusterId,0, measuredValue.Value(),0, 0 );
 
             // chip::DeviceLayer::PlatformMgr().LockChipStack();
             // chip::app::Clusters::TemperatureMeasurement::Attributes::MinMeasuredValue::Get((EndpointId)endpointId,measuredValue);
@@ -214,7 +216,7 @@ void WebsocketManager::GetClusterValue(int endpointId,int clusterId)
             // this->SendAttributeValue(endpointId,clusterId,2, measuredValue.Value(),0, 0 );
 
 
-        //break;
+        break;
         default:
             printf("\n[NOT IMPLEMENTED ERROR (GET)] NOT SUPPORT clusterId=%d endpointId=%d\n\n", clusterId,endpointId);
             return;
