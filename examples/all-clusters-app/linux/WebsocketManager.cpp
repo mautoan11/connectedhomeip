@@ -4,6 +4,7 @@
 #include <app/clusters/switch-server/switch-server.h>
 #include <app/clusters/on-off-server/on-off-server.h>
 #include <app/clusters/level-control/level-control.h>
+#include <app/clusters/window-covering-server/window-covering-server.h>
 #include <websocket-server/WebSocketServer.h>
 #include <string>
 #include <sstream>
@@ -16,6 +17,7 @@
 using namespace std;
 using namespace chip;
 using namespace chip::app::Clusters;
+using namespace chip::app::Clusters::WindowCovering;
 char buf[1024];
 //char buf_dataraw[128];
 WebsocketManager* WebsocketManager::instance = nullptr;
@@ -106,7 +108,9 @@ void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attribu
 {
     bool valueBool;
     uint valueInt;
+    uint16_t valueInt16;
     LevelControl::Commands::MoveToLevel::DecodableType data;
+    NPercent100ths position;
     switch(clusterId)
     {
         case 6:
@@ -161,9 +165,30 @@ void WebsocketManager::SetClusterValue(int endpointId,int clusterId, int attribu
                     chip::app::Clusters::TemperatureMeasurement::Attributes::MaxMeasuredValue::Set((EndpointId)endpointId,  int16_t(valueInt));
                     chip::DeviceLayer::PlatformMgr().UnlockChipStack();
                 break;
+                
                 default: printf("\n[NOT IMPLEMENTED ERROR 2] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);break;
                 }
-
+        break;
+        case 258:// 0x0102 WindowCovering
+            switch (attributeId)
+                {
+                case 14:
+                    valueInt16 = (uint16_t)value.asUInt();
+                    position.SetNonNull(valueInt16);
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    chip::app::Clusters::WindowCovering::LiftPositionSet((EndpointId)endpointId,  position);
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                case 15:
+                    valueInt16 = (uint16_t)value.asUInt();
+                    position.SetNonNull(valueInt16);
+                    chip::DeviceLayer::PlatformMgr().LockChipStack();
+                    chip::app::Clusters::WindowCovering::TiltPositionSet((EndpointId)endpointId,  position);
+                    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+                break;
+                default: printf("\n[NOT IMPLEMENTED ERROR 2] NOT SUPPORT clusterId=%d attributeId=%d\n\n", clusterId,attributeId);break;
+                }
+        break;
            
         break;
         default:

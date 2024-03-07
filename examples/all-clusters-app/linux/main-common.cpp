@@ -50,6 +50,7 @@
 #include <system/SystemPacketBuffer.h>
 #include <transport/SessionManager.h>
 #include <transport/raw/PeerAddress.h>
+#include "WebsocketManager.h"
 
 using namespace chip;
 using namespace chip::app;
@@ -269,4 +270,6 @@ void emberAfWindowCoveringClusterInitCallback(chip::EndpointId endpoint)
     sWindowCoveringManager.Init(endpoint);
     Clusters::WindowCovering::SetDefaultDelegate(endpoint, &sWindowCoveringManager);
     Clusters::WindowCovering::ConfigStatusUpdateFeatures(endpoint);
+
+    WebsocketManager::instance->SendClusterInit(0x0102,endpoint );
 }
