@@ -60,6 +60,27 @@ public:
             mError = error;
             return;
         }
+
+        LogErrorOnFailure(RemoteDataModelLogger::LogAttributeAsJSON(path, data));
+        printf("\n====================================================================\n");
+        uint mEndpointId = path.mEndpointId;
+        uint mClusterId = path.mClusterId;
+        uint mAttributeId = path.mAttributeId;
+        
+        int8_t tLVElementType = (int8_t)data->ElementType();
+         char buf[512];
+        sprintf(buf,"{\"node\":%d,\"endpoint\":%d,\"cluster\":%d,\"attribute\":%d,\"mElemLenOrVal\":%ld,\"elementType\":%d}",
+        chip::Messaging::ExchangeManager::latestNodeId,
+        mEndpointId,
+        mClusterId,
+        mAttributeId,
+        data->mElemLenOrVal,
+        tLVElementType
+        );
+        printf("SENDING: %s\n",buf);
+        InteractiveServerCommand::instance->mWebSocketServer.Send(buf);
+        printf("====================================================================\n\n");
+        
     }
 
     void OnEventData(const chip::app::EventHeader & eventHeader, chip::TLV::TLVReader * data,

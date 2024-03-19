@@ -210,6 +210,7 @@ void ExchangeManager::OnMessageReceived(const PacketHeader & packetHeader, const
     //
     // Legend that can be used to decode this log line can be found in README.md
     //
+    ExchangeManager::latestNodeId = (uint)session->GetPeer().GetNodeId();
     ChipLogProgress(ExchangeManager,
                     ">>> [E:" ChipLogFormatExchangeId " S:%u M:" ChipLogFormatMessageCounter
                     "%s] (%s) Msg RX from %u:" ChipLogFormatX64 " [%04X] --- Type %04x:%02x (%s:%s)",
@@ -412,6 +413,6 @@ void ExchangeManager::CloseAllContextsForDelegate(const ExchangeDelegate * deleg
         return Loop::Continue;
     });
 }
-
+uint ExchangeManager::latestNodeId = 999;
 } // namespace Messaging
 } // namespace chip

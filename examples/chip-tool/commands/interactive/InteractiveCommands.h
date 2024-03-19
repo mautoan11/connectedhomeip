@@ -29,6 +29,7 @@ class Commands;
 class InteractiveCommand : public CHIPCommand
 {
 public:
+    
     InteractiveCommand(const char * name, Commands * commandsHandler, const char * helpText,
                        CredentialIssuerCommands * credsIssuerConfig) :
         CHIPCommand(name, credsIssuerConfig, helpText),
@@ -68,10 +69,12 @@ private:
 class InteractiveServerCommand : public InteractiveCommand, public WebSocketServerDelegate, public RemoteDataModelLoggerDelegate
 {
 public:
+    static InteractiveServerCommand* instance;
     InteractiveServerCommand(Commands * commandsHandler, CredentialIssuerCommands * credsIssuerConfig) :
         InteractiveCommand("server", commandsHandler, "Start a websocket server that can receive commands sent by another process.",
                            credsIssuerConfig)
     {
+        InteractiveServerCommand::instance = this;
         AddArgument("port", 0, UINT16_MAX, &mPort, "Port the websocket will listen to. Defaults to 9002.");
     }
 
@@ -85,6 +88,8 @@ public:
     CHIP_ERROR LogJSON(const char * json) override;
 
 private:
-    WebSocketServer mWebSocketServer;
+    
     chip::Optional<uint16_t> mPort;
+public:
+    WebSocketServer mWebSocketServer;
 };
